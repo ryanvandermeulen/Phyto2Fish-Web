@@ -1,0 +1,11 @@
+/* Left-align displayed equations throughout the tutorial. */
+mjx-container[display="true"] {
+  text-align: left !important;
+  margin: 0.75em 0 !important;
+}
+.math.display, div.math, .quarto-display-math {
+  text-align: left !important;
+  margin-left: 0 !important;
+}
+/* Allow long display equations to scroll rather than clip. */
+mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; }
