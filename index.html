@@ -230,7 +230,7 @@ window.Quarto = {
 <p><em>Note: I would like to disclose that instead of inflicting the psychological torture of navigating my raw code onto you, I asked ChatGPT to clean up my messiness and streamline/annote my code for this tutorial.</em></p>
 <section id="first-our-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="first-our-libraries">First, our libraries</h2>
-<div id="2357c571" class="cell" data-execution_count="1">
+<div id="781fe9f0" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -252,7 +252,7 @@ C_{fish} = \alpha \times NPP \times TE^{(TL-1)}
 \]</span></p>
 <p>Slightly more detailed - here, <span class="math inline">\(NPP\)</span> represents the total, summed carbon produced within a given ecoregion (converted to “fish-equivalent” wet weight by a hand-wavy factor of 9), <span class="math inline">\(TE\)</span> describes the fraction of energy transferred between successive trophic levels, a harvesting fraction (<span class="math inline">\(\alpha\)</span>) represents the proportion of available energy ultimately realized as fisheries catch, and the exponent (<span class="math inline">\(TL - 1\)</span>) approximates the number of transfers between primary producers and harvested fish. Long story short, more primary production generally means more energy available to support fisheries, while each additional trophic transfer <strong>exponentially</strong> reduces the amount that ultimately reaches harvested fish. For example, fisheries targeting higher trophic-level predators like tuna require energy to pass through more steps in the food web, with losses occurring along the way. Fisheries targeting lower trophic-level species like sardines, on the other hand, benefit from shorter pathways between phytoplankton and the fish being harvested, meaning a greater fraction of the original energy from primary production can make its way into the catch.</p>
 <p>This is the core foundational framework we’re going to work with here, so let’s take a moment to set some of the parameters that stay constant. Feel free to play around with them! If you’re a fish nerd, you may have very strong opinions about these particular parameters. These terms can vary considerably among ecosystems, but based on the mean of ranges found in literature, we’ll use a harvesting fraction (<span class="math inline">\(\alpha\)</span>) of 0.175, a trophic transfer efficiency (<span class="math inline">\(TE\)</span>) of 0.13, and our 9:1 conversion of carbon to fish-equivalent wet weight.</p>
-<div id="dd76bdb0" class="cell" data-execution_count="2">
+<div id="5f05448a" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fisheries model parameters</span></span>
@@ -292,7 +292,7 @@ C_{m} = C - C_{p,n}
 \]</span></p>
 <p>The fraction of each phytoplankton size class to total chlorophyll concentration (<span class="math inline">\(f_p, f_n, f_m\)</span>) can then be calculated by dividing the size-specific chlorophyll concentration (<span class="math inline">\(C_p, C_n, C_m\)</span>) by the total chlorophyll concentration (<span class="math inline">\(C\)</span>) from satellite ocean color data. If your eyes are crossed, no worries, just be assured that someone spent a considerable amount of time figuring this all out, and now we can go with the maths :-) The constants below can be changed for different regions (see Table 4.2 in the <a href="https://ioccg.org/wp-content/uploads/2018/09/ioccg_report_15_2014.pdf">IOCCG report #15</a>), but we’re rolling with coefficients that are meant to work on global scales.</p>
 <p><img src="https://raw.githubusercontent.com/fish-pace/2025-tutorials/main/Supporting_files/Princess_bride.gif" class="img-fluid" alt="Is this clear?">!</p>
-<div id="cc4257f8" class="cell" data-execution_count="3">
+<div id="6d72ffb6" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Brewin (2011) size-class model coefficients</span></span>
@@ -318,7 +318,7 @@ C_{P2F} = \alpha \times NPP \times TE^{(TL-1+\Delta L)}
 \]</span></p>
 <p>Here, the f terms represent the relative contributions of micro-, nano-, and picophytoplankton, while the corresponding ω values control their influence on ΔL. Importantly, <strong>these coefficients aren’t meant to represent the literal number of trophic transfers associated with each phytoplankton size class</strong>. Instead, they control the magnitude and shape of the relationship between chlorophyll-a and <span class="math inline">\(\Delta L\)</span>. Our configuration (<span class="math inline">\(\omega_{micro}=0\)</span>, <span class="math inline">\(\omega_{nano}=0.15\)</span>, <span class="math inline">\(\omega_{pico}=2.5\)</span>) produces a relationship in which <span class="math inline">\(\Delta L\)</span> increases as smaller phytoplankton become more prevalent, representing the additional energy losses associated with longer trophic pathways. We’re not changing how much carbon phytoplankton produce, or the trophic level of the fish being harvested. We’re simply adjusting the effective length of the food-web pathway connecting the two. When smaller phytoplankton dominate, <span class="math inline">\(\Delta L\)</span> introduces additional trophic transfers, reducing the amount of production expected to reach harvested fish. When larger phytoplankton dominate, <span class="math inline">\(\Delta L\)</span> approaches zero, and we recover the original model. So, how do we put a number on those extra transfers?</p>
 <p>The plot below shows how phytoplankton size fractions change across a range of chlorophyll-a concentrations, and how those changes translate into <span class="math inline">\(\Delta L\)</span>. Go ahead, twist those knobs and see what happens!</p>
-<div id="065c5500" class="cell" data-execution_count="4">
+<div id="4d0ab3f7" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Editable size-specific transfer weighting coefficients (pico, nano, micro)</span></span>
@@ -361,7 +361,7 @@ C_{P2F} = \alpha \times NPP \times TE^{(TL-1+\Delta L)}
 <p>Below, we load the processed datasets, reconcile the ecoregion names, combine everything into a single table, and calculate our Phyto2Fish predictions using the parameters we defined above. We’ll also calculate the logarithmic bias between predicted and observed catch, which will come in handy when we start evaluating model performance.</p>
 <p>A note about polar regions: See this line? &gt; &gt;data = data[(data.Lat_Zone != ‘Polar’) &amp; (data.NPP &gt; 0) &amp; (data.CHL &gt; 0) &amp; (data.Catch &gt; 0) &amp; data.TL.notna()].copy() &gt; Comment that out (or just remove the polar exclusion) if you’d like to explore those regions too. Honestly, including them didn’t make a huge difference in the overall statistics, but the sparse and seasonally limited satellite observations at high latitudes, combined with our assumptions about annual primary production, made me a little queasy. So we left them out of the main analysis.</p>
 <p>One more thing! You’ll notice that we also load annual mean sea surface temperature (SST) and fishing effort data. SST wasn’t used in the original model, while fishing effort provides some useful context for interpreting differences between predictions and reported catch. Neither is required to calculate Phyto2Fish, but perhaps you’ll find something interesting by exploring them further. <strong>Eat the gatekeepers!</strong></p>
-<div id="b6acb6b7" class="cell" data-execution_count="5">
+<div id="6455813d" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read data</span></span>
@@ -405,7 +405,7 @@ C_{P2F} = \alpha \times NPP \times TE^{(TL-1+\Delta L)}
 <pre><code>Matched MEOWs: 206
 Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="13">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
@@ -519,7 +519,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <section id="howd-we-do" class="level2">
 <h2 class="anchored" data-anchor-id="howd-we-do">How’d we do?</h2>
 <p>Because we scientists are gluttons for scatter plots, let’s see how our predicted fisheries catch stacks up against the real thing! In our created plot, the dashed line represents a perfect match between observed and predicted catch. Points above the line indicate overprediction, while points below indicate underprediction. We’ve also included a few statistics to help quantify how well the model performs. Remember, we’re trying to capture broad-scale patterns in fisheries production, not predict exactly how many fish will end up on someone’s dinner plate. Obviously, there’s a lot more going on in food web + fleet dynamics than bottom-up forcing from our phytoplankton overlords.</p>
-<div id="66ff0ad8" class="cell" data-execution_count="6">
+<div id="184bca87" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Geometric mean ± 1 geometric standard deviation per MEOW</span></span>
@@ -563,7 +563,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <section id="mappy-time" class="level2">
 <h2 class="anchored" data-anchor-id="mappy-time">Mappy time!</h2>
 <p>Let’s put all this in a little spatial context. The map we’ll generate below will show the average difference between the Phyto2Fish-predicted and observed fisheries catch across the MEOWs. Red regions indicate where our model overpredicts catch, while blue regions indicate underprediction. The closer to white, the better the agreement. Darker gray areas represent regions that were excluded from the analysis or lacked sufficient data, including regions for which fisheries catch data were unavailable from Sea Around Us (e.g., Antarctica).</p>
-<div id="6c68453f" class="cell" data-execution_count="7">
+<div id="3be793fc" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch 'Log_bias' to 'Baseline_Log_bias' to view baseline model bias instead</span></span>
@@ -611,7 +611,7 @@ Interactive ecosystem explorer
 <p>Choose a marine ecoregion, map variable, and zoom level below. The indicator cards and map update directly in your browser—even on GitHub Pages, without a Python server. The original Jupyter notebook also retains its <code>ipywidgets</code> viewer.</p>
 </div>
 </div>
-<div id="9dc6db04" class="cell" data-results="asis" data-execution_count="8">
+<div id="33f78a0b" class="cell" data-results="asis" data-execution_count="8">
 <div class="cell-output cell-output-display">
 <iframe title="Interactive Phyto2Fish ecosystem explorer" src="explorer.html" style="display:block;width:100%;height:1020px;border:0;" loading="eager"></iframe>
 </div>
