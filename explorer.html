@@ -79,7 +79,7 @@ const fmt=n=>Number.isFinite(n)?(Math.abs(n)>=1000?n.toLocaleString(undefined,{m
 function opts(el,items){for(const [label,value] of items){const o=document.createElement('option');o.textContent=label;o.value=value;el.appendChild(o);}}
 opts(regionEl,info.regions.map(n=>[n,n]));opts(varEl,info.variables);opts(sauEl,info.sau_options);
 regionEl.value=info.regions.includes('Carolinian')?'Carolinian':info.regions[0];
-varEl.value='Catch';sauEl.value='Fishing sectors';
+varEl.value='Catch';sauEl.value='Functional groups';
 const ecoGroup=document.createElementNS(ns,'g');ecoGroup.setAttribute('id','ecoregion-layer');svg.appendChild(ecoGroup);
 const paths=new Map();
 for(const s of info.shapes){
