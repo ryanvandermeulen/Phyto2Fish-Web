@@ -9,21 +9,21 @@ body{margin:0;background:#fff;color:#263341;font-family:Arial,Helvetica,sans-ser
 .controls label{font-size:13px;font-weight:650;display:flex;flex-direction:column;gap:5px;color:#4a5763}
 select{font-size:14px;border:1px solid #c8d1da;border-radius:7px;background:white;padding:8px;max-width:100%}
 #sel-region{width:260px}#sel-var{width:220px}#sel-sau{width:260px}
-.top{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.85fr);gap:16px;align-items:stretch}
-#profile,#sau-panel{min-width:0;display:flex;flex-direction:column}
-#profile>div{padding:13px!important;flex:1;min-width:0}
+.top{display:flex;flex-direction:column;gap:14px;width:100%}
+#profile,#sau-panel{min-width:0;width:100%;display:flex;flex-direction:column}
+#profile>div{padding:18px!important;min-width:0;width:100%}
 #sau-panel{border:1px solid #ddd;border-radius:12px;padding:16px;background:#fff}
 .sau-eyebrow{font-size:11px;color:#888;letter-spacing:1px}
 .sau-heading{font-size:20px;font-weight:700;margin-top:5px}
 .sau-subheading{font-size:12px;color:#888;margin-top:5px}
-.sau-body{display:flex;align-items:center;justify-content:center;gap:18px;flex:1;min-height:220px}
-#donut{flex:0 1 260px;width:44%;max-width:285px;min-width:120px;overflow:visible}
+.sau-body{display:flex;align-items:center;justify-content:center;gap:30px;width:100%;min-height:215px;padding:10px 16px}
+#donut{flex:0 0 205px;width:205px;max-width:45%;height:auto;overflow:visible}
 #donut circle{transition:stroke-dasharray .15s}
-#sau-legend{min-width:0;flex:1;list-style:none;padding:0;margin:0;font-size:12px;line-height:1.4}
+#sau-legend{min-width:0;flex:0 1 310px;list-style:none;padding:0;margin:0;font-size:13px;line-height:1.5}
 #sau-legend li{display:flex;align-items:flex-start;margin:7px 0;gap:7px;overflow-wrap:anywhere}
 .swatch{width:11px;height:11px;flex:none;border-radius:2px;margin-top:3px}
 .sau-note{font-size:11px;color:#88939d;line-height:1.4;margin-top:8px}
-.map-side{margin-top:16px;min-width:0;border:1px solid #dce1e5;border-radius:12px;background:#fff;padding:14px}
+.map-side{margin-top:14px;min-width:0;border:1px solid #dce1e5;border-radius:12px;background:#fff;padding:14px}
 .map-heading{font-size:17px;font-weight:700;text-align:center;margin:3px 0 10px}
 .map-container{width:100%;aspect-ratio:2/1;background:#edf5f9;border-radius:7px;overflow:hidden;border:1px solid #d6e0e6}
 #map{display:block;width:100%;height:100%}
@@ -34,8 +34,8 @@ select{font-size:14px;border:1px solid #c8d1da;border-radius:7px;background:whit
 .legend-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:9px;font-size:12px;color:#61717d}
 .legend{height:10px;border-radius:4px;flex:1;background:linear-gradient(90deg,#440154,#3b528b,#21918c,#5ec962,#fde725)}
 .note{font-size:11px;color:#687783;margin-top:10px;line-height:1.5}
-@media(max-width:800px){.top{grid-template-columns:1fr}.sau-body{min-height:200px}.map-container{aspect-ratio:2/1}}
-@media(max-width:480px){.sau-body{flex-direction:column}#donut{width:60%;flex:none}#sau-legend{width:100%}}
+@media(max-width:800px){.sau-body{min-height:200px}.map-container{aspect-ratio:2/1}}
+@media(max-width:480px){.sau-body{flex-direction:column;gap:10px}#donut{width:190px;max-width:75%;flex:none}#sau-legend{width:100%;flex:none}}
 </style></head><body>
 <div class="shell">
   <div class="controls">
