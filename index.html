@@ -236,7 +236,7 @@ window.Quarto = {
 <p><em>Note: I would like to disclose that instead of inflicting the psychological torture of navigating my raw code onto you, I asked ChatGPT to clean up my messiness and streamline/annote my code for this tutorial.</em></p>
 <section id="first-our-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="first-our-libraries">First, our libraries</h2>
-<div id="8b901fd2" class="cell" data-execution_count="1">
+<div id="9368c774" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -258,7 +258,7 @@ C_{fish} = \alpha \times NPP \times TE^{(TL-1)}
 \]</span></p>
 <p>Slightly more detailed - here, <span class="math inline">\(NPP\)</span> represents the total, summed carbon produced within a given ecoregion (converted to “fish-equivalent” wet weight by a hand-wavy factor of 9), <span class="math inline">\(TE\)</span> describes the fraction of energy transferred between successive trophic levels, a harvesting fraction (<span class="math inline">\(\alpha\)</span>) represents the proportion of available energy ultimately realized as fisheries catch, and the exponent (<span class="math inline">\(TL - 1\)</span>) approximates the number of transfers between primary producers and harvested fish. Long story short, more primary production generally means more energy available to support fisheries, while each additional trophic transfer <strong>exponentially</strong> reduces the amount that ultimately reaches harvested fish. For example, fisheries targeting higher trophic-level predators like tuna require energy to pass through more steps in the food web, with losses occurring along the way. Fisheries targeting lower trophic-level species like sardines, on the other hand, benefit from shorter pathways between phytoplankton and the fish being harvested, meaning a greater fraction of the original energy from primary production can make its way into the catch.</p>
 <p>This is the core foundational framework we’re going to work with here, so let’s take a moment to set some of the parameters that stay constant. Feel free to play around with them! If you’re a fish nerd, you may have very strong opinions about these particular parameters. These terms can vary considerably among ecosystems, but based on the mean of ranges found in literature, we’ll use a harvesting fraction (<span class="math inline">\(\alpha\)</span>) of 0.175, a trophic transfer efficiency (<span class="math inline">\(TE\)</span>) of 0.13, and our 9:1 conversion of carbon to fish-equivalent wet weight.</p>
-<div id="b15ad747" class="cell" data-execution_count="2">
+<div id="bd34ad41" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fisheries model parameters</span></span>
@@ -298,7 +298,7 @@ C_{m} = C - C_{p,n}
 \]</span></p>
 <p>The fraction of each phytoplankton size class to total chlorophyll concentration (<span class="math inline">\(f_p, f_n, f_m\)</span>) can then be calculated by dividing the size-specific chlorophyll concentration (<span class="math inline">\(C_p, C_n, C_m\)</span>) by the total chlorophyll concentration (<span class="math inline">\(C\)</span>) from satellite ocean color data. If your eyes are crossed, no worries, just be assured that someone spent a considerable amount of time figuring this all out, and now we can go with the maths :-) The constants below can be changed for different regions (see Table 4.2 in the <a href="https://ioccg.org/wp-content/uploads/2018/09/ioccg_report_15_2014.pdf">IOCCG report #15</a>), but we’re rolling with coefficients that are meant to work on global scales.</p>
 <p><img src="https://raw.githubusercontent.com/fish-pace/2025-tutorials/main/Supporting_files/Princess_bride.gif" class="img-fluid" alt="Is this clear?">!</p>
-<div id="20c45255" class="cell" data-execution_count="3">
+<div id="04ab72cb" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Brewin (2011) size-class model coefficients</span></span>
@@ -324,7 +324,7 @@ C_{P2F} = \alpha \times NPP \times TE^{(TL-1+\Delta L)}
 \]</span></p>
 <p>Here, the f terms represent the relative contributions of micro-, nano-, and picophytoplankton, while the corresponding ω values control their influence on ΔL. Importantly, <strong>these coefficients aren’t meant to represent the literal number of trophic transfers associated with each phytoplankton size class</strong>. Instead, they control the magnitude and shape of the relationship between chlorophyll-a and <span class="math inline">\(\Delta L\)</span>. Our configuration (<span class="math inline">\(\omega_{micro}=0\)</span>, <span class="math inline">\(\omega_{nano}=0.15\)</span>, <span class="math inline">\(\omega_{pico}=2.5\)</span>) produces a relationship in which <span class="math inline">\(\Delta L\)</span> increases as smaller phytoplankton become more prevalent, representing the additional energy losses associated with longer trophic pathways. We’re not changing how much carbon phytoplankton produce, or the trophic level of the fish being harvested. We’re simply adjusting the effective length of the food-web pathway connecting the two. When smaller phytoplankton dominate, <span class="math inline">\(\Delta L\)</span> introduces additional trophic transfers, reducing the amount of production expected to reach harvested fish. When larger phytoplankton dominate, <span class="math inline">\(\Delta L\)</span> approaches zero, and we recover the original model. So, how do we put a number on those extra transfers?</p>
 <p>The plot below shows how phytoplankton size fractions change across a range of chlorophyll-a concentrations, and how those changes translate into <span class="math inline">\(\Delta L\)</span>.</p>
-<div id="7640114a" class="cell" data-execution_count="4">
+<div id="4f3889de" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Editable size-specific transfer weighting coefficients (pico, nano, micro)</span></span>
@@ -365,7 +365,7 @@ C_{P2F} = \alpha \times NPP \times TE^{(TL-1+\Delta L)}
 <p><em>A quick caveat</em>: <strong>we are not attempting to predict how many fish will actually be caught in a given year</strong>. Fisheries catches depend on fishing effort, management, market conditions, population dynamics, and plenty of other factors that aren’t explicitly represented here. Instead, we’re exploring whether accounting for phytoplankton size structure improves our ability to describe broad-scale differences in fisheries production relative to a simpler model based on NPP and trophic level alone.</p>
 <p>To evaluate our approach, we apply the model across the Marine Ecoregions of the World (MEOWs), using annual estimates of satellite-derived net primary production (<span class="math inline">\(NPP\)</span>) and chlorophyll-a, alongside reported fisheries catch and mean trophic level data from the (<a href="https://www.seaaroundus.org/data/#/marine-trophic-index">Sea Around Us project</a>). By combining these datasets, we can estimate how much of that primary production might ultimately support fisheries, and compare our predictions against reported catches. Now, about the data… I went back and forth about including all the data extraction and processing procedures in this notebook. I won’t lie, some of it was a pain. Between manually downloading datasets, temporal interpolations, resampling, and wrangling files across different virtual computing environments (which have the audacity of imposing storage limits!), there were quite a few moving parts. At peak irritation level, I discovered that the MEOWs used by the Sea Around Us dataset <em>occasionally</em> have slightly different names than those in the MEOW shapefile. Ultimately, I decided to spare you the data-wrangling adventure and provide the processed, matched up datasets directly. The extraction, aggregation, and processing procedures are described in the associated manuscript, but I’ve left those steps out here to keep things approachable (and because of those pesky storage limitations).</p>
 <p>Below, we load the processed datasets, reconcile the ecoregion names, combine everything into a single table, and calculate our Phyto2Fish predictions using the parameters we defined above. We’ll also calculate the logarithmic bias between predicted and observed catch, which will come in handy when we start evaluating model performance. One more thing! You’ll notice that we also load annual mean sea surface temperature (SST) and fishing effort data. SST wasn’t used in the original model, while fishing effort provides some useful context for interpreting differences between predictions and reported catch. Neither is required to calculate Phyto2Fish, but perhaps you’ll find something interesting by exploring them further. <strong>Eat the gatekeepers!</strong></p>
-<div id="5baa6a64" class="cell" data-execution_count="5">
+<div id="bafd3387" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read data</span></span>
@@ -375,41 +375,43 @@ C_{P2F} = \alpha \times NPP \times TE^{(TL-1+\Delta L)}
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>fishing_hours <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/MEOW_mean_monthly_fishing_hours_2012_2024.csv'</span>)</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>catch <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/MEOW_catch_smoothed_1998_present.csv'</span>)</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>tl <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/MEOW_mtl_smoothed_1998_present.csv'</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>lookup <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/SAU_MEOW_lookup.csv'</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>meow <span class="op">=</span> gpd.read_file(<span class="st">'Supporting_files/meow_ecos.shp'</span>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Translate SAU column names to MEOW ecoregion names.</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>rename <span class="op">=</span> {<span class="ss">f"MEOW_</span><span class="sc">{</span>r<span class="sc">.</span>meow_id<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>r<span class="sc">.</span>meow_name<span class="sc">}</span><span class="ss">"</span>.replace(<span class="st">' '</span>, <span class="st">'_'</span>).replace(<span class="st">'-'</span>, <span class="st">'_'</span>).replace(<span class="st">'/'</span>, <span class="st">'_'</span>): r.meow_name <span class="cf">for</span> r <span class="kw">in</span> lookup.itertuples()}</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>catch, tl <span class="op">=</span> catch.rename(columns<span class="op">=</span>rename), tl.rename(columns<span class="op">=</span>rename)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>common <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">set</span>(npp) <span class="op">&amp;</span> <span class="bu">set</span>(chl) <span class="op">&amp;</span> <span class="bu">set</span>(catch) <span class="op">&amp;</span> <span class="bu">set</span>(tl) <span class="op">-</span> {<span class="st">'year'</span>})</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Matched MEOWs: </span><span class="sc">{</span><span class="bu">len</span>(common)<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine observations by MEOW and year, add fishing effort and latitude zones</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_long(df, value):</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df[[<span class="st">'year'</span>] <span class="op">+</span> common].melt(<span class="st">'year'</span>, var_name<span class="op">=</span><span class="st">'MEOW'</span>, value_name<span class="op">=</span>value) </span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> to_long(npp, <span class="st">'NPP'</span>).merge(to_long(chl, <span class="st">'CHL'</span>)).merge(to_long(catch, <span class="st">'Catch'</span>)).merge(to_long(tl, <span class="st">'TL'</span>))</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.merge(fishing_hours[[<span class="st">'MEOW'</span>, <span class="st">'mean_monthly_fishing_hours'</span>]], on<span class="op">=</span><span class="st">'MEOW'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>zones <span class="op">=</span> meow[[<span class="st">'ECOREGION'</span>, <span class="st">'Lat_Zone'</span>]].drop_duplicates().rename(columns<span class="op">=</span>{<span class="st">'ECOREGION'</span>: <span class="st">'MEOW'</span>})</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.merge(zones, on<span class="op">=</span><span class="st">'MEOW'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude polar regions and invalid observations</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data[(data.Lat_Zone <span class="op">!=</span> <span class="st">'Polar'</span>) <span class="op">&amp;</span> (data.NPP <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> (data.CHL <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> (data.Catch <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> data.TL.notna()].copy()</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Baseline and Phyto2Fish predictions</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Delta_L'</span>] <span class="op">=</span> delta_tl(data.CHL)</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Baseline'</span>] <span class="op">=</span> alpha <span class="op">*</span> data.NPP <span class="op">*</span> wet_weight <span class="op">*</span> TE <span class="op">**</span> (data.TL <span class="op">-</span> <span class="dv">1</span>)</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Predicted'</span>] <span class="op">=</span> alpha <span class="op">*</span> data.NPP <span class="op">*</span> wet_weight <span class="op">*</span> TE <span class="op">**</span> (data.TL <span class="op">-</span> <span class="dv">1</span> <span class="op">+</span> data.Delta_L)</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Baseline_Log_bias'</span>] <span class="op">=</span> np.log10(data.Baseline <span class="op">/</span> data.Catch)</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Log_bias'</span>] <span class="op">=</span> np.log10(data.Predicted <span class="op">/</span> data.Catch)</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>effort_data <span class="op">=</span> data.dropna(subset<span class="op">=</span>[<span class="st">'mean_monthly_fishing_hours'</span>]).copy()</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Valid ecoregion-years: </span><span class="sc">{</span><span class="bu">len</span>(data)<span class="sc">}</span><span class="ss"> | Years: </span><span class="sc">{</span>data<span class="sc">.</span>year<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">–</span><span class="sc">{</span>data<span class="sc">.</span>year<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>data.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>length <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/MEOW_mean_max_length_1998_present.csv'</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>lookup <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/SAU_MEOW_lookup.csv'</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>meow <span class="op">=</span> gpd.read_file(<span class="st">'Supporting_files/meow_ecos.shp'</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Translate SAU column names to MEOW ecoregion names.</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>rename <span class="op">=</span> {<span class="ss">f"MEOW_</span><span class="sc">{</span>r<span class="sc">.</span>meow_id<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>r<span class="sc">.</span>meow_name<span class="sc">}</span><span class="ss">"</span>.replace(<span class="st">' '</span>, <span class="st">'_'</span>).replace(<span class="st">'-'</span>, <span class="st">'_'</span>).replace(<span class="st">'/'</span>, <span class="st">'_'</span>): r.meow_name <span class="cf">for</span> r <span class="kw">in</span> lookup.itertuples()}</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>catch, tl, length <span class="op">=</span> [df.rename(columns<span class="op">=</span>rename) <span class="cf">for</span> df <span class="kw">in</span> (catch, tl, length)]</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>common <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">set</span>(npp) <span class="op">&amp;</span> <span class="bu">set</span>(chl) <span class="op">&amp;</span> <span class="bu">set</span>(catch) <span class="op">&amp;</span> <span class="bu">set</span>(tl) <span class="op">-</span> {<span class="st">'year'</span>})</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Matched MEOWs: </span><span class="sc">{</span><span class="bu">len</span>(common)<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine observations by MEOW and year, add fishing effort and latitude zones</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_long(df, value):</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df[[<span class="st">'year'</span>] <span class="op">+</span> common].melt(<span class="st">'year'</span>, var_name<span class="op">=</span><span class="st">'MEOW'</span>, value_name<span class="op">=</span>value) </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> to_long(npp, <span class="st">'NPP'</span>).merge(to_long(chl, <span class="st">'CHL'</span>)).merge(to_long(catch, <span class="st">'Catch'</span>)).merge(to_long(tl, <span class="st">'TL'</span>))</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.merge(to_long(length, <span class="st">'Mean_Length'</span>), on<span class="op">=</span>[<span class="st">'year'</span>, <span class="st">'MEOW'</span>], how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.merge(fishing_hours[[<span class="st">'MEOW'</span>, <span class="st">'mean_monthly_fishing_hours'</span>]], on<span class="op">=</span><span class="st">'MEOW'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>zones <span class="op">=</span> meow[[<span class="st">'ECOREGION'</span>, <span class="st">'Lat_Zone'</span>]].drop_duplicates().rename(columns<span class="op">=</span>{<span class="st">'ECOREGION'</span>: <span class="st">'MEOW'</span>})</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.merge(zones, on<span class="op">=</span><span class="st">'MEOW'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude polar regions and invalid observations</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data[(data.Lat_Zone <span class="op">!=</span> <span class="st">'Polar'</span>) <span class="op">&amp;</span> (data.NPP <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> (data.CHL <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> (data.Catch <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> data.TL.notna()].copy()</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Baseline and Phyto2Fish predictions</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Delta_L'</span>] <span class="op">=</span> delta_tl(data.CHL)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Baseline'</span>] <span class="op">=</span> alpha <span class="op">*</span> data.NPP <span class="op">*</span> wet_weight <span class="op">*</span> TE <span class="op">**</span> (data.TL <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Predicted'</span>] <span class="op">=</span> alpha <span class="op">*</span> data.NPP <span class="op">*</span> wet_weight <span class="op">*</span> TE <span class="op">**</span> (data.TL <span class="op">-</span> <span class="dv">1</span> <span class="op">+</span> data.Delta_L)</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Baseline_Log_bias'</span>] <span class="op">=</span> np.log10(data.Baseline <span class="op">/</span> data.Catch)</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Log_bias'</span>] <span class="op">=</span> np.log10(data.Predicted <span class="op">/</span> data.Catch)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>effort_data <span class="op">=</span> data.dropna(subset<span class="op">=</span>[<span class="st">'mean_monthly_fishing_hours'</span>]).copy()</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Valid ecoregion-years: </span><span class="sc">{</span><span class="bu">len</span>(data)<span class="sc">}</span><span class="ss"> | Years: </span><span class="sc">{</span>data<span class="sc">.</span>year<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">–</span><span class="sc">{</span>data<span class="sc">.</span>year<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>data.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Matched MEOWs: 206
 Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="21">
 <div>
 
 
@@ -423,6 +425,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <th data-quarto-table-cell-role="th">CHL</th>
 <th data-quarto-table-cell-role="th">Catch</th>
 <th data-quarto-table-cell-role="th">TL</th>
+<th data-quarto-table-cell-role="th">Mean_Length</th>
 <th data-quarto-table-cell-role="th">mean_monthly_fishing_hours</th>
 <th data-quarto-table-cell-role="th">Lat_Zone</th>
 <th data-quarto-table-cell-role="th">Delta_L</th>
@@ -441,6 +444,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <td>0.648062</td>
 <td>252279.4</td>
 <td>3.390</td>
+<td>56.0</td>
 <td>98548.796011</td>
 <td>Temperate</td>
 <td>0.560098</td>
@@ -457,6 +461,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <td>0.589475</td>
 <td>247520.2</td>
 <td>3.376</td>
+<td>53.8</td>
 <td>98548.796011</td>
 <td>Temperate</td>
 <td>0.605009</td>
@@ -473,6 +478,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <td>0.635991</td>
 <td>237026.8</td>
 <td>3.372</td>
+<td>53.3</td>
 <td>98548.796011</td>
 <td>Temperate</td>
 <td>0.568820</td>
@@ -489,6 +495,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <td>0.643037</td>
 <td>223398.6</td>
 <td>3.378</td>
+<td>59.8</td>
 <td>98548.796011</td>
 <td>Temperate</td>
 <td>0.563697</td>
@@ -505,6 +512,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <td>0.931520</td>
 <td>210637.8</td>
 <td>3.392</td>
+<td>56.3</td>
 <td>98548.796011</td>
 <td>Temperate</td>
 <td>0.411120</td>
@@ -523,7 +531,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <section id="howd-we-do" class="level2">
 <h2 class="anchored" data-anchor-id="howd-we-do">How’d we do?</h2>
 <p>Because we scientists are gluttons for scatter plots, let’s see how our predicted fisheries catch stacks up against the real thing! In our created plot, the dashed line represents a perfect match between observed and predicted catch. Points above the line indicate overprediction, while points below indicate underprediction. We’ve also included a few statistics to help quantify how well the model performs. Remember, we’re trying to capture broad-scale patterns in fisheries production, not predict exactly how many fish will end up on someone’s dinner plate. Obviously, there’s a lot more going on in food web + fleet dynamics than bottom-up forcing from our phytoplankton overlords.</p>
-<div id="1f11d526" class="cell" data-execution_count="6">
+<div id="7d6b96a7" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Geometric mean ± 1 geometric standard deviation per MEOW</span></span>
@@ -567,7 +575,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <section id="mappy-time" class="level2">
 <h2 class="anchored" data-anchor-id="mappy-time">Mappy time!</h2>
 <p>Let’s put all this in a little spatial context. The map we’ll generate below will show the average difference between the Phyto2Fish-predicted and observed fisheries catch across the MEOWs. Red regions indicate where our model overpredicts catch, while blue regions indicate underprediction. The closer to white, the better the agreement. Darker gray areas represent regions that were excluded from the analysis or lacked sufficient data, including regions for which fisheries catch data were unavailable from Sea Around Us (e.g., Antarctica).</p>
-<div id="9cde0c7b" class="cell" data-execution_count="7">
+<div id="63f36dad" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show Python code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch 'Log_bias' to 'Baseline_Log_bias' to view baseline model bias instead</span></span>
@@ -615,7 +623,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <p>Choose a marine ecoregion, map variable, and catch-composition category below. The profile, global map, and composition chart update directly in your browser.</p>
 </div>
 </div>
-<div id="8684975a" class="cell" data-results="asis" data-execution_count="8">
+<div id="5f24e4ef" class="cell" data-results="asis" data-execution_count="8">
 <div class="cell-output cell-output-display">
 
 <iframe id="phyto2fish-explorer" title="Interactive Phyto2Fish ecosystem explorer" src="explorer.html" style="display:block;width:100%;height:1350px;border:0;overflow:hidden;" scrolling="no" loading="eager" onload="
@@ -1279,174 +1287,176 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <span id="cb9-190"><a href="#cb9-190" aria-hidden="true" tabindex="-1"></a>fishing_hours <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/MEOW_mean_monthly_fishing_hours_2012_2024.csv'</span>)</span>
 <span id="cb9-191"><a href="#cb9-191" aria-hidden="true" tabindex="-1"></a>catch <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/MEOW_catch_smoothed_1998_present.csv'</span>)</span>
 <span id="cb9-192"><a href="#cb9-192" aria-hidden="true" tabindex="-1"></a>tl <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/MEOW_mtl_smoothed_1998_present.csv'</span>)</span>
-<span id="cb9-193"><a href="#cb9-193" aria-hidden="true" tabindex="-1"></a>lookup <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/SAU_MEOW_lookup.csv'</span>)</span>
-<span id="cb9-194"><a href="#cb9-194" aria-hidden="true" tabindex="-1"></a>meow <span class="op">=</span> gpd.read_file(<span class="st">'Supporting_files/meow_ecos.shp'</span>)</span>
-<span id="cb9-195"><a href="#cb9-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-196"><a href="#cb9-196" aria-hidden="true" tabindex="-1"></a><span class="co"># Translate SAU column names to MEOW ecoregion names.</span></span>
-<span id="cb9-197"><a href="#cb9-197" aria-hidden="true" tabindex="-1"></a>rename <span class="op">=</span> {<span class="ss">f"MEOW_</span><span class="sc">{</span>r<span class="sc">.</span>meow_id<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>r<span class="sc">.</span>meow_name<span class="sc">}</span><span class="ss">"</span>.replace(<span class="st">' '</span>, <span class="st">'_'</span>).replace(<span class="st">'-'</span>, <span class="st">'_'</span>).replace(<span class="st">'/'</span>, <span class="st">'_'</span>): r.meow_name <span class="cf">for</span> r <span class="kw">in</span> lookup.itertuples()}</span>
-<span id="cb9-198"><a href="#cb9-198" aria-hidden="true" tabindex="-1"></a>catch, tl <span class="op">=</span> catch.rename(columns<span class="op">=</span>rename), tl.rename(columns<span class="op">=</span>rename)</span>
-<span id="cb9-199"><a href="#cb9-199" aria-hidden="true" tabindex="-1"></a>common <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">set</span>(npp) <span class="op">&amp;</span> <span class="bu">set</span>(chl) <span class="op">&amp;</span> <span class="bu">set</span>(catch) <span class="op">&amp;</span> <span class="bu">set</span>(tl) <span class="op">-</span> {<span class="st">'year'</span>})</span>
-<span id="cb9-200"><a href="#cb9-200" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Matched MEOWs: </span><span class="sc">{</span><span class="bu">len</span>(common)<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb9-201"><a href="#cb9-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-202"><a href="#cb9-202" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine observations by MEOW and year, add fishing effort and latitude zones</span></span>
-<span id="cb9-203"><a href="#cb9-203" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_long(df, value):</span>
-<span id="cb9-204"><a href="#cb9-204" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df[[<span class="st">'year'</span>] <span class="op">+</span> common].melt(<span class="st">'year'</span>, var_name<span class="op">=</span><span class="st">'MEOW'</span>, value_name<span class="op">=</span>value) </span>
-<span id="cb9-205"><a href="#cb9-205" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> to_long(npp, <span class="st">'NPP'</span>).merge(to_long(chl, <span class="st">'CHL'</span>)).merge(to_long(catch, <span class="st">'Catch'</span>)).merge(to_long(tl, <span class="st">'TL'</span>))</span>
-<span id="cb9-206"><a href="#cb9-206" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.merge(fishing_hours[[<span class="st">'MEOW'</span>, <span class="st">'mean_monthly_fishing_hours'</span>]], on<span class="op">=</span><span class="st">'MEOW'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
-<span id="cb9-207"><a href="#cb9-207" aria-hidden="true" tabindex="-1"></a>zones <span class="op">=</span> meow[[<span class="st">'ECOREGION'</span>, <span class="st">'Lat_Zone'</span>]].drop_duplicates().rename(columns<span class="op">=</span>{<span class="st">'ECOREGION'</span>: <span class="st">'MEOW'</span>})</span>
-<span id="cb9-208"><a href="#cb9-208" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.merge(zones, on<span class="op">=</span><span class="st">'MEOW'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
-<span id="cb9-209"><a href="#cb9-209" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude polar regions and invalid observations</span></span>
-<span id="cb9-210"><a href="#cb9-210" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data[(data.Lat_Zone <span class="op">!=</span> <span class="st">'Polar'</span>) <span class="op">&amp;</span> (data.NPP <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> (data.CHL <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> (data.Catch <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> data.TL.notna()].copy()</span>
-<span id="cb9-211"><a href="#cb9-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-212"><a href="#cb9-212" aria-hidden="true" tabindex="-1"></a><span class="co"># Baseline and Phyto2Fish predictions</span></span>
-<span id="cb9-213"><a href="#cb9-213" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Delta_L'</span>] <span class="op">=</span> delta_tl(data.CHL)</span>
-<span id="cb9-214"><a href="#cb9-214" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Baseline'</span>] <span class="op">=</span> alpha <span class="op">*</span> data.NPP <span class="op">*</span> wet_weight <span class="op">*</span> TE <span class="op">**</span> (data.TL <span class="op">-</span> <span class="dv">1</span>)</span>
-<span id="cb9-215"><a href="#cb9-215" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Predicted'</span>] <span class="op">=</span> alpha <span class="op">*</span> data.NPP <span class="op">*</span> wet_weight <span class="op">*</span> TE <span class="op">**</span> (data.TL <span class="op">-</span> <span class="dv">1</span> <span class="op">+</span> data.Delta_L)</span>
-<span id="cb9-216"><a href="#cb9-216" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Baseline_Log_bias'</span>] <span class="op">=</span> np.log10(data.Baseline <span class="op">/</span> data.Catch)</span>
-<span id="cb9-217"><a href="#cb9-217" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Log_bias'</span>] <span class="op">=</span> np.log10(data.Predicted <span class="op">/</span> data.Catch)</span>
-<span id="cb9-218"><a href="#cb9-218" aria-hidden="true" tabindex="-1"></a>effort_data <span class="op">=</span> data.dropna(subset<span class="op">=</span>[<span class="st">'mean_monthly_fishing_hours'</span>]).copy()</span>
-<span id="cb9-219"><a href="#cb9-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-220"><a href="#cb9-220" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Valid ecoregion-years: </span><span class="sc">{</span><span class="bu">len</span>(data)<span class="sc">}</span><span class="ss"> | Years: </span><span class="sc">{</span>data<span class="sc">.</span>year<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">–</span><span class="sc">{</span>data<span class="sc">.</span>year<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb9-221"><a href="#cb9-221" aria-hidden="true" tabindex="-1"></a>data.head()</span>
-<span id="cb9-222"><a href="#cb9-222" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb9-223"><a href="#cb9-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-224"><a href="#cb9-224" aria-hidden="true" tabindex="-1"></a><span class="fu">## How'd we do? </span></span>
+<span id="cb9-193"><a href="#cb9-193" aria-hidden="true" tabindex="-1"></a>length <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/MEOW_mean_max_length_1998_present.csv'</span>)</span>
+<span id="cb9-194"><a href="#cb9-194" aria-hidden="true" tabindex="-1"></a>lookup <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/SAU_MEOW_lookup.csv'</span>)</span>
+<span id="cb9-195"><a href="#cb9-195" aria-hidden="true" tabindex="-1"></a>meow <span class="op">=</span> gpd.read_file(<span class="st">'Supporting_files/meow_ecos.shp'</span>)</span>
+<span id="cb9-196"><a href="#cb9-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-197"><a href="#cb9-197" aria-hidden="true" tabindex="-1"></a><span class="co"># Translate SAU column names to MEOW ecoregion names.</span></span>
+<span id="cb9-198"><a href="#cb9-198" aria-hidden="true" tabindex="-1"></a>rename <span class="op">=</span> {<span class="ss">f"MEOW_</span><span class="sc">{</span>r<span class="sc">.</span>meow_id<span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>r<span class="sc">.</span>meow_name<span class="sc">}</span><span class="ss">"</span>.replace(<span class="st">' '</span>, <span class="st">'_'</span>).replace(<span class="st">'-'</span>, <span class="st">'_'</span>).replace(<span class="st">'/'</span>, <span class="st">'_'</span>): r.meow_name <span class="cf">for</span> r <span class="kw">in</span> lookup.itertuples()}</span>
+<span id="cb9-199"><a href="#cb9-199" aria-hidden="true" tabindex="-1"></a>catch, tl, length <span class="op">=</span> [df.rename(columns<span class="op">=</span>rename) <span class="cf">for</span> df <span class="kw">in</span> (catch, tl, length)]</span>
+<span id="cb9-200"><a href="#cb9-200" aria-hidden="true" tabindex="-1"></a>common <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">set</span>(npp) <span class="op">&amp;</span> <span class="bu">set</span>(chl) <span class="op">&amp;</span> <span class="bu">set</span>(catch) <span class="op">&amp;</span> <span class="bu">set</span>(tl) <span class="op">-</span> {<span class="st">'year'</span>})</span>
+<span id="cb9-201"><a href="#cb9-201" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Matched MEOWs: </span><span class="sc">{</span><span class="bu">len</span>(common)<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb9-202"><a href="#cb9-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-203"><a href="#cb9-203" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine observations by MEOW and year, add fishing effort and latitude zones</span></span>
+<span id="cb9-204"><a href="#cb9-204" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_long(df, value):</span>
+<span id="cb9-205"><a href="#cb9-205" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df[[<span class="st">'year'</span>] <span class="op">+</span> common].melt(<span class="st">'year'</span>, var_name<span class="op">=</span><span class="st">'MEOW'</span>, value_name<span class="op">=</span>value) </span>
+<span id="cb9-206"><a href="#cb9-206" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> to_long(npp, <span class="st">'NPP'</span>).merge(to_long(chl, <span class="st">'CHL'</span>)).merge(to_long(catch, <span class="st">'Catch'</span>)).merge(to_long(tl, <span class="st">'TL'</span>))</span>
+<span id="cb9-207"><a href="#cb9-207" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.merge(to_long(length, <span class="st">'Mean_Length'</span>), on<span class="op">=</span>[<span class="st">'year'</span>, <span class="st">'MEOW'</span>], how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb9-208"><a href="#cb9-208" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.merge(fishing_hours[[<span class="st">'MEOW'</span>, <span class="st">'mean_monthly_fishing_hours'</span>]], on<span class="op">=</span><span class="st">'MEOW'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb9-209"><a href="#cb9-209" aria-hidden="true" tabindex="-1"></a>zones <span class="op">=</span> meow[[<span class="st">'ECOREGION'</span>, <span class="st">'Lat_Zone'</span>]].drop_duplicates().rename(columns<span class="op">=</span>{<span class="st">'ECOREGION'</span>: <span class="st">'MEOW'</span>})</span>
+<span id="cb9-210"><a href="#cb9-210" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data.merge(zones, on<span class="op">=</span><span class="st">'MEOW'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb9-211"><a href="#cb9-211" aria-hidden="true" tabindex="-1"></a><span class="co"># Exclude polar regions and invalid observations</span></span>
+<span id="cb9-212"><a href="#cb9-212" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data[(data.Lat_Zone <span class="op">!=</span> <span class="st">'Polar'</span>) <span class="op">&amp;</span> (data.NPP <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> (data.CHL <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> (data.Catch <span class="op">&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> data.TL.notna()].copy()</span>
+<span id="cb9-213"><a href="#cb9-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-214"><a href="#cb9-214" aria-hidden="true" tabindex="-1"></a><span class="co"># Baseline and Phyto2Fish predictions</span></span>
+<span id="cb9-215"><a href="#cb9-215" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Delta_L'</span>] <span class="op">=</span> delta_tl(data.CHL)</span>
+<span id="cb9-216"><a href="#cb9-216" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Baseline'</span>] <span class="op">=</span> alpha <span class="op">*</span> data.NPP <span class="op">*</span> wet_weight <span class="op">*</span> TE <span class="op">**</span> (data.TL <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb9-217"><a href="#cb9-217" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Predicted'</span>] <span class="op">=</span> alpha <span class="op">*</span> data.NPP <span class="op">*</span> wet_weight <span class="op">*</span> TE <span class="op">**</span> (data.TL <span class="op">-</span> <span class="dv">1</span> <span class="op">+</span> data.Delta_L)</span>
+<span id="cb9-218"><a href="#cb9-218" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Baseline_Log_bias'</span>] <span class="op">=</span> np.log10(data.Baseline <span class="op">/</span> data.Catch)</span>
+<span id="cb9-219"><a href="#cb9-219" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'Log_bias'</span>] <span class="op">=</span> np.log10(data.Predicted <span class="op">/</span> data.Catch)</span>
+<span id="cb9-220"><a href="#cb9-220" aria-hidden="true" tabindex="-1"></a>effort_data <span class="op">=</span> data.dropna(subset<span class="op">=</span>[<span class="st">'mean_monthly_fishing_hours'</span>]).copy()</span>
+<span id="cb9-221"><a href="#cb9-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-222"><a href="#cb9-222" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Valid ecoregion-years: </span><span class="sc">{</span><span class="bu">len</span>(data)<span class="sc">}</span><span class="ss"> | Years: </span><span class="sc">{</span>data<span class="sc">.</span>year<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">–</span><span class="sc">{</span>data<span class="sc">.</span>year<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb9-223"><a href="#cb9-223" aria-hidden="true" tabindex="-1"></a>data.head()</span>
+<span id="cb9-224"><a href="#cb9-224" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb9-225"><a href="#cb9-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-226"><a href="#cb9-226" aria-hidden="true" tabindex="-1"></a>Because we scientists are gluttons for scatter plots, let's see how our predicted fisheries catch stacks up against the real thing! In our created plot, the dashed line represents a perfect match between observed and predicted catch. Points above the line indicate overprediction, while points below indicate underprediction. We've also included a few statistics to help quantify how well the model performs. Remember, we're trying to capture broad-scale patterns in fisheries production, not predict exactly how many fish will end up on someone's dinner plate. Obviously, there's a lot more going on in food web + fleet dynamics than bottom-up forcing from our phytoplankton overlords.</span>
+<span id="cb9-226"><a href="#cb9-226" aria-hidden="true" tabindex="-1"></a><span class="fu">## How'd we do? </span></span>
 <span id="cb9-227"><a href="#cb9-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-230"><a href="#cb9-230" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb9-231"><a href="#cb9-231" aria-hidden="true" tabindex="-1"></a><span class="co"># Geometric mean ± 1 geometric standard deviation per MEOW</span></span>
-<span id="cb9-232"><a href="#cb9-232" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> geom_stats(x):</span>
-<span id="cb9-233"><a href="#cb9-233" aria-hidden="true" tabindex="-1"></a>    log_x <span class="op">=</span> np.log10(x)</span>
-<span id="cb9-234"><a href="#cb9-234" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.Series({<span class="st">'mean'</span>: <span class="dv">10</span><span class="op">**</span>log_x.mean(), <span class="st">'low'</span>: <span class="dv">10</span><span class="op">**</span>(log_x.mean() <span class="op">-</span> log_x.std()), <span class="st">'high'</span>: <span class="dv">10</span><span class="op">**</span>(log_x.mean() <span class="op">+</span> log_x.std())})</span>
-<span id="cb9-235"><a href="#cb9-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-236"><a href="#cb9-236" aria-hidden="true" tabindex="-1"></a>variables <span class="op">=</span> [<span class="st">'Catch'</span>, <span class="st">'Baseline'</span>, <span class="st">'Predicted'</span>]</span>
-<span id="cb9-237"><a href="#cb9-237" aria-hidden="true" tabindex="-1"></a>avg <span class="op">=</span> data.groupby(<span class="st">'MEOW'</span>)[variables].<span class="bu">apply</span>(<span class="kw">lambda</span> g: pd.concat({var: geom_stats(g[var]) <span class="cf">for</span> var <span class="kw">in</span> variables})).unstack()</span>
-<span id="cb9-238"><a href="#cb9-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-239"><a href="#cb9-239" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">6</span>), sharex<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb9-240"><a href="#cb9-240" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, model <span class="kw">in</span> <span class="bu">zip</span>(axes, [<span class="st">'Baseline'</span>, <span class="st">'Predicted'</span>]):</span>
-<span id="cb9-241"><a href="#cb9-241" aria-hidden="true" tabindex="-1"></a>    x, y <span class="op">=</span> avg[(<span class="st">'Catch'</span>, <span class="st">'mean'</span>)].to_numpy(), avg[(model, <span class="st">'mean'</span>)].to_numpy()</span>
-<span id="cb9-242"><a href="#cb9-242" aria-hidden="true" tabindex="-1"></a>    lx, ly <span class="op">=</span> np.log10(x), np.log10(y)</span>
-<span id="cb9-243"><a href="#cb9-243" aria-hidden="true" tabindex="-1"></a>    error <span class="op">=</span> ly <span class="op">-</span> lx</span>
-<span id="cb9-244"><a href="#cb9-244" aria-hidden="true" tabindex="-1"></a>    mae, bias, r <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(error)), np.mean(error), np.corrcoef(lx, ly)[<span class="dv">0</span>, <span class="dv">1</span>]</span>
-<span id="cb9-245"><a href="#cb9-245" aria-hidden="true" tabindex="-1"></a>    density <span class="op">=</span> gaussian_kde(np.vstack([lx, ly]))(np.vstack([lx, ly]))</span>
-<span id="cb9-246"><a href="#cb9-246" aria-hidden="true" tabindex="-1"></a>    order <span class="op">=</span> np.argsort(density)</span>
-<span id="cb9-247"><a href="#cb9-247" aria-hidden="true" tabindex="-1"></a>    xerr <span class="op">=</span> [x <span class="op">-</span> avg[(<span class="st">'Catch'</span>, <span class="st">'low'</span>)], avg[(<span class="st">'Catch'</span>, <span class="st">'high'</span>)] <span class="op">-</span> x]</span>
-<span id="cb9-248"><a href="#cb9-248" aria-hidden="true" tabindex="-1"></a>    yerr <span class="op">=</span> [y <span class="op">-</span> avg[(model, <span class="st">'low'</span>)], avg[(model, <span class="st">'high'</span>)] <span class="op">-</span> y]</span>
-<span id="cb9-249"><a href="#cb9-249" aria-hidden="true" tabindex="-1"></a>    ax.errorbar(x, y, xerr<span class="op">=</span>xerr, yerr<span class="op">=</span>yerr, fmt<span class="op">=</span><span class="st">'none'</span>, ecolor<span class="op">=</span><span class="st">'0.5'</span>, lw<span class="op">=</span><span class="fl">1.8</span>, zorder<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb9-250"><a href="#cb9-250" aria-hidden="true" tabindex="-1"></a>    ax.scatter(x[order], y[order], c<span class="op">=</span>density[order], s<span class="op">=</span><span class="dv">35</span>, alpha<span class="op">=</span><span class="fl">0.85</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb9-251"><a href="#cb9-251" aria-hidden="true" tabindex="-1"></a>    ax.plot([<span class="fl">1e1</span>, <span class="fl">1e8</span>], [<span class="fl">1e1</span>, <span class="fl">1e8</span>], <span class="st">'k--'</span>, lw<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb9-252"><a href="#cb9-252" aria-hidden="true" tabindex="-1"></a>    ax.<span class="bu">set</span>(xscale<span class="op">=</span><span class="st">'log'</span>, yscale<span class="op">=</span><span class="st">'log'</span>, xlim<span class="op">=</span>(<span class="fl">1e1</span>, <span class="fl">1e8</span>), ylim<span class="op">=</span>(<span class="fl">1e1</span>, <span class="fl">1e8</span>), xlabel<span class="op">=</span><span class="st">'Observed catch (tonnes)'</span>, title<span class="op">=</span>model)</span>
-<span id="cb9-253"><a href="#cb9-253" aria-hidden="true" tabindex="-1"></a>    ax.text(<span class="fl">0.97</span>, <span class="fl">0.03</span>, <span class="ss">f'N = </span><span class="sc">{</span><span class="bu">len</span>(x)<span class="sc">}</span><span class="ch">\n</span><span class="ss">MAE = </span><span class="sc">{</span>mae<span class="sc">:.3f}</span><span class="ch">\n</span><span class="ss">Bias = </span><span class="sc">{</span>bias<span class="sc">:.3f}</span><span class="ch">\n</span><span class="ss">R² = </span><span class="sc">{</span>r<span class="op">*</span>r<span class="sc">:.3f}</span><span class="ch">\n</span><span class="ss">r = </span><span class="sc">{</span>r<span class="sc">:.3f}</span><span class="ss">'</span>, transform<span class="op">=</span>ax.transAxes, ha<span class="op">=</span><span class="st">'right'</span>, va<span class="op">=</span><span class="st">'bottom'</span>, bbox<span class="op">=</span>{<span class="st">'facecolor'</span>: <span class="st">'white'</span>, <span class="st">'alpha'</span>: <span class="fl">0.85</span>})</span>
-<span id="cb9-254"><a href="#cb9-254" aria-hidden="true" tabindex="-1"></a>    ax.grid(alpha<span class="op">=</span><span class="fl">0.25</span>)</span>
-<span id="cb9-255"><a href="#cb9-255" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'Predicted catch (tonnes)'</span>)</span>
-<span id="cb9-256"><a href="#cb9-256" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Phyto2Fish'</span>)</span>
-<span id="cb9-257"><a href="#cb9-257" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb9-258"><a href="#cb9-258" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb9-259"><a href="#cb9-259" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb9-260"><a href="#cb9-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-261"><a href="#cb9-261" aria-hidden="true" tabindex="-1"></a><span class="fu">## Mappy time!</span></span>
+<span id="cb9-228"><a href="#cb9-228" aria-hidden="true" tabindex="-1"></a>Because we scientists are gluttons for scatter plots, let's see how our predicted fisheries catch stacks up against the real thing! In our created plot, the dashed line represents a perfect match between observed and predicted catch. Points above the line indicate overprediction, while points below indicate underprediction. We've also included a few statistics to help quantify how well the model performs. Remember, we're trying to capture broad-scale patterns in fisheries production, not predict exactly how many fish will end up on someone's dinner plate. Obviously, there's a lot more going on in food web + fleet dynamics than bottom-up forcing from our phytoplankton overlords.</span>
+<span id="cb9-229"><a href="#cb9-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-232"><a href="#cb9-232" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb9-233"><a href="#cb9-233" aria-hidden="true" tabindex="-1"></a><span class="co"># Geometric mean ± 1 geometric standard deviation per MEOW</span></span>
+<span id="cb9-234"><a href="#cb9-234" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> geom_stats(x):</span>
+<span id="cb9-235"><a href="#cb9-235" aria-hidden="true" tabindex="-1"></a>    log_x <span class="op">=</span> np.log10(x)</span>
+<span id="cb9-236"><a href="#cb9-236" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.Series({<span class="st">'mean'</span>: <span class="dv">10</span><span class="op">**</span>log_x.mean(), <span class="st">'low'</span>: <span class="dv">10</span><span class="op">**</span>(log_x.mean() <span class="op">-</span> log_x.std()), <span class="st">'high'</span>: <span class="dv">10</span><span class="op">**</span>(log_x.mean() <span class="op">+</span> log_x.std())})</span>
+<span id="cb9-237"><a href="#cb9-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-238"><a href="#cb9-238" aria-hidden="true" tabindex="-1"></a>variables <span class="op">=</span> [<span class="st">'Catch'</span>, <span class="st">'Baseline'</span>, <span class="st">'Predicted'</span>]</span>
+<span id="cb9-239"><a href="#cb9-239" aria-hidden="true" tabindex="-1"></a>avg <span class="op">=</span> data.groupby(<span class="st">'MEOW'</span>)[variables].<span class="bu">apply</span>(<span class="kw">lambda</span> g: pd.concat({var: geom_stats(g[var]) <span class="cf">for</span> var <span class="kw">in</span> variables})).unstack()</span>
+<span id="cb9-240"><a href="#cb9-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-241"><a href="#cb9-241" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">6</span>), sharex<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-242"><a href="#cb9-242" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, model <span class="kw">in</span> <span class="bu">zip</span>(axes, [<span class="st">'Baseline'</span>, <span class="st">'Predicted'</span>]):</span>
+<span id="cb9-243"><a href="#cb9-243" aria-hidden="true" tabindex="-1"></a>    x, y <span class="op">=</span> avg[(<span class="st">'Catch'</span>, <span class="st">'mean'</span>)].to_numpy(), avg[(model, <span class="st">'mean'</span>)].to_numpy()</span>
+<span id="cb9-244"><a href="#cb9-244" aria-hidden="true" tabindex="-1"></a>    lx, ly <span class="op">=</span> np.log10(x), np.log10(y)</span>
+<span id="cb9-245"><a href="#cb9-245" aria-hidden="true" tabindex="-1"></a>    error <span class="op">=</span> ly <span class="op">-</span> lx</span>
+<span id="cb9-246"><a href="#cb9-246" aria-hidden="true" tabindex="-1"></a>    mae, bias, r <span class="op">=</span> np.mean(np.<span class="bu">abs</span>(error)), np.mean(error), np.corrcoef(lx, ly)[<span class="dv">0</span>, <span class="dv">1</span>]</span>
+<span id="cb9-247"><a href="#cb9-247" aria-hidden="true" tabindex="-1"></a>    density <span class="op">=</span> gaussian_kde(np.vstack([lx, ly]))(np.vstack([lx, ly]))</span>
+<span id="cb9-248"><a href="#cb9-248" aria-hidden="true" tabindex="-1"></a>    order <span class="op">=</span> np.argsort(density)</span>
+<span id="cb9-249"><a href="#cb9-249" aria-hidden="true" tabindex="-1"></a>    xerr <span class="op">=</span> [x <span class="op">-</span> avg[(<span class="st">'Catch'</span>, <span class="st">'low'</span>)], avg[(<span class="st">'Catch'</span>, <span class="st">'high'</span>)] <span class="op">-</span> x]</span>
+<span id="cb9-250"><a href="#cb9-250" aria-hidden="true" tabindex="-1"></a>    yerr <span class="op">=</span> [y <span class="op">-</span> avg[(model, <span class="st">'low'</span>)], avg[(model, <span class="st">'high'</span>)] <span class="op">-</span> y]</span>
+<span id="cb9-251"><a href="#cb9-251" aria-hidden="true" tabindex="-1"></a>    ax.errorbar(x, y, xerr<span class="op">=</span>xerr, yerr<span class="op">=</span>yerr, fmt<span class="op">=</span><span class="st">'none'</span>, ecolor<span class="op">=</span><span class="st">'0.5'</span>, lw<span class="op">=</span><span class="fl">1.8</span>, zorder<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb9-252"><a href="#cb9-252" aria-hidden="true" tabindex="-1"></a>    ax.scatter(x[order], y[order], c<span class="op">=</span>density[order], s<span class="op">=</span><span class="dv">35</span>, alpha<span class="op">=</span><span class="fl">0.85</span>, zorder<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb9-253"><a href="#cb9-253" aria-hidden="true" tabindex="-1"></a>    ax.plot([<span class="fl">1e1</span>, <span class="fl">1e8</span>], [<span class="fl">1e1</span>, <span class="fl">1e8</span>], <span class="st">'k--'</span>, lw<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb9-254"><a href="#cb9-254" aria-hidden="true" tabindex="-1"></a>    ax.<span class="bu">set</span>(xscale<span class="op">=</span><span class="st">'log'</span>, yscale<span class="op">=</span><span class="st">'log'</span>, xlim<span class="op">=</span>(<span class="fl">1e1</span>, <span class="fl">1e8</span>), ylim<span class="op">=</span>(<span class="fl">1e1</span>, <span class="fl">1e8</span>), xlabel<span class="op">=</span><span class="st">'Observed catch (tonnes)'</span>, title<span class="op">=</span>model)</span>
+<span id="cb9-255"><a href="#cb9-255" aria-hidden="true" tabindex="-1"></a>    ax.text(<span class="fl">0.97</span>, <span class="fl">0.03</span>, <span class="ss">f'N = </span><span class="sc">{</span><span class="bu">len</span>(x)<span class="sc">}</span><span class="ch">\n</span><span class="ss">MAE = </span><span class="sc">{</span>mae<span class="sc">:.3f}</span><span class="ch">\n</span><span class="ss">Bias = </span><span class="sc">{</span>bias<span class="sc">:.3f}</span><span class="ch">\n</span><span class="ss">R² = </span><span class="sc">{</span>r<span class="op">*</span>r<span class="sc">:.3f}</span><span class="ch">\n</span><span class="ss">r = </span><span class="sc">{</span>r<span class="sc">:.3f}</span><span class="ss">'</span>, transform<span class="op">=</span>ax.transAxes, ha<span class="op">=</span><span class="st">'right'</span>, va<span class="op">=</span><span class="st">'bottom'</span>, bbox<span class="op">=</span>{<span class="st">'facecolor'</span>: <span class="st">'white'</span>, <span class="st">'alpha'</span>: <span class="fl">0.85</span>})</span>
+<span id="cb9-256"><a href="#cb9-256" aria-hidden="true" tabindex="-1"></a>    ax.grid(alpha<span class="op">=</span><span class="fl">0.25</span>)</span>
+<span id="cb9-257"><a href="#cb9-257" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'Predicted catch (tonnes)'</span>)</span>
+<span id="cb9-258"><a href="#cb9-258" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Phyto2Fish'</span>)</span>
+<span id="cb9-259"><a href="#cb9-259" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb9-260"><a href="#cb9-260" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb9-261"><a href="#cb9-261" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb9-262"><a href="#cb9-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-263"><a href="#cb9-263" aria-hidden="true" tabindex="-1"></a>Let's put all this in a little spatial context. The map we'll generate below will show the average difference between the Phyto2Fish-predicted and observed fisheries catch across the MEOWs. Red regions indicate where our model overpredicts catch, while blue regions indicate underprediction. The closer to white, the better the agreement. Darker gray areas represent regions that were excluded from the analysis or lacked sufficient data, including regions for which fisheries catch data were unavailable from Sea Around Us (e.g., Antarctica).</span>
+<span id="cb9-263"><a href="#cb9-263" aria-hidden="true" tabindex="-1"></a><span class="fu">## Mappy time!</span></span>
 <span id="cb9-264"><a href="#cb9-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-267"><a href="#cb9-267" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb9-268"><a href="#cb9-268" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch 'Log_bias' to 'Baseline_Log_bias' to view baseline model bias instead</span></span>
-<span id="cb9-269"><a href="#cb9-269" aria-hidden="true" tabindex="-1"></a>mean_bias <span class="op">=</span> data.groupby(<span class="st">'MEOW'</span>, as_index<span class="op">=</span><span class="va">False</span>)[<span class="st">'Log_bias'</span>].mean()</span>
-<span id="cb9-270"><a href="#cb9-270" aria-hidden="true" tabindex="-1"></a>map_data <span class="op">=</span> meow.merge(mean_bias, left_on<span class="op">=</span><span class="st">'ECOREGION'</span>, right_on<span class="op">=</span><span class="st">'MEOW'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
-<span id="cb9-271"><a href="#cb9-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-272"><a href="#cb9-272" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">6</span>), subplot_kw<span class="op">=</span>{<span class="st">'projection'</span>: ccrs.PlateCarree()})</span>
-<span id="cb9-273"><a href="#cb9-273" aria-hidden="true" tabindex="-1"></a>map_data.plot(column<span class="op">=</span><span class="st">'Log_bias'</span>, ax<span class="op">=</span>ax, cmap<span class="op">=</span><span class="st">'RdBu_r'</span>, vmin<span class="op">=-</span><span class="dv">2</span>, vmax<span class="op">=</span><span class="dv">2</span>, legend<span class="op">=</span><span class="va">True</span>, missing_kwds<span class="op">=</span>{<span class="st">'color'</span>: <span class="st">'lightgray'</span>}, legend_kwds<span class="op">=</span>{<span class="st">'label'</span>: <span class="st">'Mean log₁₀ (predicted / observed)'</span>})</span>
-<span id="cb9-274"><a href="#cb9-274" aria-hidden="true" tabindex="-1"></a>ax.add_feature(cfeature.LAND, facecolor<span class="op">=</span><span class="st">'lightgray'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, linewidth<span class="op">=</span><span class="fl">0.3</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb9-275"><a href="#cb9-275" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Longitude'</span>, ylabel<span class="op">=</span><span class="st">'Latitude'</span>, title<span class="op">=</span><span class="st">'Mean fisheries catch prediction bias'</span>)</span>
-<span id="cb9-276"><a href="#cb9-276" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb9-277"><a href="#cb9-277" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb9-278"><a href="#cb9-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb9-279"><a href="#cb9-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-280"><a href="#cb9-280" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exploring marine ecosystems around the world</span></span>
+<span id="cb9-265"><a href="#cb9-265" aria-hidden="true" tabindex="-1"></a>Let's put all this in a little spatial context. The map we'll generate below will show the average difference between the Phyto2Fish-predicted and observed fisheries catch across the MEOWs. Red regions indicate where our model overpredicts catch, while blue regions indicate underprediction. The closer to white, the better the agreement. Darker gray areas represent regions that were excluded from the analysis or lacked sufficient data, including regions for which fisheries catch data were unavailable from Sea Around Us (e.g., Antarctica).</span>
+<span id="cb9-266"><a href="#cb9-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-269"><a href="#cb9-269" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb9-270"><a href="#cb9-270" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch 'Log_bias' to 'Baseline_Log_bias' to view baseline model bias instead</span></span>
+<span id="cb9-271"><a href="#cb9-271" aria-hidden="true" tabindex="-1"></a>mean_bias <span class="op">=</span> data.groupby(<span class="st">'MEOW'</span>, as_index<span class="op">=</span><span class="va">False</span>)[<span class="st">'Log_bias'</span>].mean()</span>
+<span id="cb9-272"><a href="#cb9-272" aria-hidden="true" tabindex="-1"></a>map_data <span class="op">=</span> meow.merge(mean_bias, left_on<span class="op">=</span><span class="st">'ECOREGION'</span>, right_on<span class="op">=</span><span class="st">'MEOW'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
+<span id="cb9-273"><a href="#cb9-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-274"><a href="#cb9-274" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">6</span>), subplot_kw<span class="op">=</span>{<span class="st">'projection'</span>: ccrs.PlateCarree()})</span>
+<span id="cb9-275"><a href="#cb9-275" aria-hidden="true" tabindex="-1"></a>map_data.plot(column<span class="op">=</span><span class="st">'Log_bias'</span>, ax<span class="op">=</span>ax, cmap<span class="op">=</span><span class="st">'RdBu_r'</span>, vmin<span class="op">=-</span><span class="dv">2</span>, vmax<span class="op">=</span><span class="dv">2</span>, legend<span class="op">=</span><span class="va">True</span>, missing_kwds<span class="op">=</span>{<span class="st">'color'</span>: <span class="st">'lightgray'</span>}, legend_kwds<span class="op">=</span>{<span class="st">'label'</span>: <span class="st">'Mean log₁₀ (predicted / observed)'</span>})</span>
+<span id="cb9-276"><a href="#cb9-276" aria-hidden="true" tabindex="-1"></a>ax.add_feature(cfeature.LAND, facecolor<span class="op">=</span><span class="st">'lightgray'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, linewidth<span class="op">=</span><span class="fl">0.3</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb9-277"><a href="#cb9-277" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Longitude'</span>, ylabel<span class="op">=</span><span class="st">'Latitude'</span>, title<span class="op">=</span><span class="st">'Mean fisheries catch prediction bias'</span>)</span>
+<span id="cb9-278"><a href="#cb9-278" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb9-279"><a href="#cb9-279" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb9-280"><a href="#cb9-280" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb9-281"><a href="#cb9-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-282"><a href="#cb9-282" aria-hidden="true" tabindex="-1"></a>You want to get fancy?? Yeah you do. Let's interactively explore individual marine ecoregions and see how their environmental conditions, phytoplankton communities, and fisheries compare. Select an 'ecoregion' from the dropdown menu, and the dashboard will summarize nine indicators, from sea surface temperature and primary production to observed and predicted fisheries catch. The accompanying global map shows ecosystem-wide patterns, with your selected ecoregion outlined in black. Use the map-variable dropdown to change the mapped indicator, or the catch-composition dropdown to explore Sea Around Us functional groups, commercial groups, fishing gears, and fishing sectors. A few things to know before diving in:</span>
+<span id="cb9-282"><a href="#cb9-282" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exploring marine ecosystems around the world</span></span>
 <span id="cb9-283"><a href="#cb9-283" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-284"><a href="#cb9-284" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Environmental conditions:** Sea surface temperature and chlorophyll-*a* are shown as trends per decade over 1998–2025. The other annual indicators are summarized as their mean ± standard deviation over the available model period (1998–2019). Arrows indicate statistically significant increases or decreases (p &lt; 0.05).</span>
-<span id="cb9-285"><a href="#cb9-285" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Fisheries catch:** We're comparing observed catches with two mechanistic estimates. The baseline model uses primary production and the catch-weighted mean trophic level, while the size-adjusted model (Phyto2Fish) also accounts for the additional trophic transfers associated with smaller phytoplankton.</span>
-<span id="cb9-286"><a href="#cb9-286" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Fishing activity:** Apparent fishing effort comes from Global Fishing Watch satellite-based vessel tracking. These are summarized average monthly fishing hours over 2012–2024, and we also report the fishing effort magnitude relative to others worldwide (percentile). Keep in mind that these are total hours, not fishing intensity per unit area.</span>
-<span id="cb9-287"><a href="#cb9-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-288"><a href="#cb9-288" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb9-284"><a href="#cb9-284" aria-hidden="true" tabindex="-1"></a>You want to get fancy?? Yeah you do. Let's interactively explore individual marine ecoregions and see how their environmental conditions, phytoplankton communities, and fisheries compare. Select an 'ecoregion' from the dropdown menu, and the dashboard will summarize nine indicators, from sea surface temperature and primary production to observed and predicted fisheries catch. The accompanying global map shows ecosystem-wide patterns, with your selected ecoregion outlined in black. Use the map-variable dropdown to change the mapped indicator, or the catch-composition dropdown to explore Sea Around Us functional groups, commercial groups, fishing gears, and fishing sectors. A few things to know before diving in:</span>
+<span id="cb9-285"><a href="#cb9-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-286"><a href="#cb9-286" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Environmental conditions:** Sea surface temperature and chlorophyll-*a* are shown as trends per decade over 1998–2025. The other annual indicators are summarized as their mean ± standard deviation over the available model period (1998–2019). Arrows indicate statistically significant increases or decreases (p &lt; 0.05).</span>
+<span id="cb9-287"><a href="#cb9-287" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Fisheries catch:** We're comparing observed catches with two mechanistic estimates. The baseline model uses primary production and the catch-weighted mean trophic level, while the size-adjusted model (Phyto2Fish) also accounts for the additional trophic transfers associated with smaller phytoplankton.</span>
+<span id="cb9-288"><a href="#cb9-288" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Fishing activity:** Apparent fishing effort comes from Global Fishing Watch satellite-based vessel tracking. These are summarized average monthly fishing hours over 2012–2024, and we also report the fishing effort magnitude relative to others worldwide (percentile). Keep in mind that these are total hours, not fishing intensity per unit area.</span>
 <span id="cb9-289"><a href="#cb9-289" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-290"><a href="#cb9-290" aria-hidden="true" tabindex="-1"></a>So go ahead, pick somewhere interesting. Does the model perform better in productive coastal waters or in regions dominated by smaller phytoplankton? Do changes in phytoplankton communities correspond with changes in predicted fisheries production? And where does the model seem to miss something important?</span>
+<span id="cb9-290"><a href="#cb9-290" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
 <span id="cb9-291"><a href="#cb9-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-292"><a href="#cb9-292" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip}</span>
-<span id="cb9-293"><a href="#cb9-293" aria-hidden="true" tabindex="-1"></a><span class="fu">## Interactive ecosystem explorer</span></span>
-<span id="cb9-294"><a href="#cb9-294" aria-hidden="true" tabindex="-1"></a>Choose a marine ecoregion, map variable, and catch-composition category below. The profile, global map, and composition chart update directly in your browser.</span>
-<span id="cb9-295"><a href="#cb9-295" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb9-296"><a href="#cb9-296" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-299"><a href="#cb9-299" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
-<span id="cb9-300"><a href="#cb9-300" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb9-301"><a href="#cb9-301" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: true</span></span>
-<span id="cb9-302"><a href="#cb9-302" aria-hidden="true" tabindex="-1"></a><span class="co">#| results: asis</span></span>
-<span id="cb9-303"><a href="#cb9-303" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> HTML, display</span>
-<span id="cb9-304"><a href="#cb9-304" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ecosystem_dashboard <span class="im">as</span> dash</span>
-<span id="cb9-305"><a href="#cb9-305" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> quarto_explorer <span class="im">import</span> make_explorer</span>
-<span id="cb9-306"><a href="#cb9-306" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb9-307"><a href="#cb9-307" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> shutil</span>
-<span id="cb9-308"><a href="#cb9-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-309"><a href="#cb9-309" aria-hidden="true" tabindex="-1"></a><span class="co"># Capture routine SAU loading messages so they do not appear in the tutorial.</span></span>
-<span id="cb9-310"><a href="#cb9-310" aria-hidden="true" tabindex="-1"></a><span class="co"># Exceptions still propagate and stop the render if configuration fails.</span></span>
-<span id="cb9-311"><a href="#cb9-311" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> contextlib</span>
-<span id="cb9-312"><a href="#cb9-312" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
-<span id="cb9-313"><a href="#cb9-313" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-314"><a href="#cb9-314" aria-hidden="true" tabindex="-1"></a>_sau_log <span class="op">=</span> io.StringIO()</span>
-<span id="cb9-315"><a href="#cb9-315" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> contextlib.redirect_stdout(_sau_log):</span>
-<span id="cb9-316"><a href="#cb9-316" aria-hidden="true" tabindex="-1"></a>    dash.configure(</span>
-<span id="cb9-317"><a href="#cb9-317" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>data, sst<span class="op">=</span>sst, chl<span class="op">=</span>chl, meow<span class="op">=</span>meow,</span>
-<span id="cb9-318"><a href="#cb9-318" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span>alpha, TE<span class="op">=</span>TE, wet_weight<span class="op">=</span>wet_weight</span>
-<span id="cb9-319"><a href="#cb9-319" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb9-320"><a href="#cb9-320" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-321"><a href="#cb9-321" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep genuine missing-data or mapping warnings visible.</span></span>
-<span id="cb9-322"><a href="#cb9-322" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _line <span class="kw">in</span> _sau_log.getvalue().splitlines():</span>
-<span id="cb9-323"><a href="#cb9-323" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">any</span>(word <span class="kw">in</span> _line.lower() <span class="cf">for</span> word <span class="kw">in</span> (</span>
-<span id="cb9-324"><a href="#cb9-324" aria-hidden="true" tabindex="-1"></a>        <span class="st">'warning'</span>, <span class="st">'missing'</span>, <span class="st">'unmatched'</span>, <span class="st">'not found'</span>, <span class="st">'conflict'</span></span>
-<span id="cb9-325"><a href="#cb9-325" aria-hidden="true" tabindex="-1"></a>    )):</span>
-<span id="cb9-326"><a href="#cb9-326" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(_line)</span>
-<span id="cb9-327"><a href="#cb9-327" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-328"><a href="#cb9-328" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a standalone explorer and copy it into Quarto's published site.</span></span>
-<span id="cb9-329"><a href="#cb9-329" aria-hidden="true" tabindex="-1"></a>explorer_file <span class="op">=</span> make_explorer(<span class="st">'explorer.html'</span>)</span>
-<span id="cb9-330"><a href="#cb9-330" aria-hidden="true" tabindex="-1"></a>site_dir <span class="op">=</span> Path(<span class="st">'_site'</span>)</span>
-<span id="cb9-331"><a href="#cb9-331" aria-hidden="true" tabindex="-1"></a>site_dir.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb9-332"><a href="#cb9-332" aria-hidden="true" tabindex="-1"></a>shutil.copy2(explorer_file, site_dir <span class="op">/</span> <span class="st">'explorer.html'</span>)</span>
-<span id="cb9-333"><a href="#cb9-333" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-334"><a href="#cb9-334" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-335"><a href="#cb9-335" aria-hidden="true" tabindex="-1"></a><span class="co"># Embed the explorer with automatic height adjustment.</span></span>
-<span id="cb9-336"><a href="#cb9-336" aria-hidden="true" tabindex="-1"></a>display(HTML(<span class="st">"""</span></span>
-<span id="cb9-337"><a href="#cb9-337" aria-hidden="true" tabindex="-1"></a><span class="st">&lt;iframe</span></span>
-<span id="cb9-338"><a href="#cb9-338" aria-hidden="true" tabindex="-1"></a><span class="st">    id="phyto2fish-explorer"</span></span>
-<span id="cb9-339"><a href="#cb9-339" aria-hidden="true" tabindex="-1"></a><span class="st">    title="Interactive Phyto2Fish ecosystem explorer"</span></span>
-<span id="cb9-340"><a href="#cb9-340" aria-hidden="true" tabindex="-1"></a><span class="st">    src="explorer.html"</span></span>
-<span id="cb9-341"><a href="#cb9-341" aria-hidden="true" tabindex="-1"></a><span class="st">    style="display:block;width:100%;height:1350px;border:0;overflow:hidden;"</span></span>
-<span id="cb9-342"><a href="#cb9-342" aria-hidden="true" tabindex="-1"></a><span class="st">    scrolling="no"</span></span>
-<span id="cb9-343"><a href="#cb9-343" aria-hidden="true" tabindex="-1"></a><span class="st">    loading="eager"</span></span>
-<span id="cb9-344"><a href="#cb9-344" aria-hidden="true" tabindex="-1"></a><span class="st">    onload="</span></span>
-<span id="cb9-345"><a href="#cb9-345" aria-hidden="true" tabindex="-1"></a><span class="st">        const frame = this;</span></span>
-<span id="cb9-346"><a href="#cb9-346" aria-hidden="true" tabindex="-1"></a><span class="st">        const resize = () =&gt; {</span></span>
-<span id="cb9-347"><a href="#cb9-347" aria-hidden="true" tabindex="-1"></a><span class="st">            const doc = frame.contentDocument;</span></span>
-<span id="cb9-348"><a href="#cb9-348" aria-hidden="true" tabindex="-1"></a><span class="st">            if (doc) {</span></span>
-<span id="cb9-349"><a href="#cb9-349" aria-hidden="true" tabindex="-1"></a><span class="st">                frame.style.height =</span></span>
-<span id="cb9-350"><a href="#cb9-350" aria-hidden="true" tabindex="-1"></a><span class="st">                    Math.ceil(doc.documentElement.scrollHeight + 5) + 'px';</span></span>
-<span id="cb9-351"><a href="#cb9-351" aria-hidden="true" tabindex="-1"></a><span class="st">            }</span></span>
-<span id="cb9-352"><a href="#cb9-352" aria-hidden="true" tabindex="-1"></a><span class="st">        };</span></span>
-<span id="cb9-353"><a href="#cb9-353" aria-hidden="true" tabindex="-1"></a><span class="st">        resize();</span></span>
-<span id="cb9-354"><a href="#cb9-354" aria-hidden="true" tabindex="-1"></a><span class="st">        new ResizeObserver(resize).observe(</span></span>
-<span id="cb9-355"><a href="#cb9-355" aria-hidden="true" tabindex="-1"></a><span class="st">            frame.contentDocument.documentElement</span></span>
-<span id="cb9-356"><a href="#cb9-356" aria-hidden="true" tabindex="-1"></a><span class="st">        );</span></span>
-<span id="cb9-357"><a href="#cb9-357" aria-hidden="true" tabindex="-1"></a><span class="st">    "</span></span>
-<span id="cb9-358"><a href="#cb9-358" aria-hidden="true" tabindex="-1"></a><span class="st">&gt;&lt;/iframe&gt;</span></span>
-<span id="cb9-359"><a href="#cb9-359" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>))</span>
-<span id="cb9-360"><a href="#cb9-360" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb9-361"><a href="#cb9-361" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-362"><a href="#cb9-362" aria-hidden="true" tabindex="-1"></a><span class="fu">## Wrapping things up</span></span>
+<span id="cb9-292"><a href="#cb9-292" aria-hidden="true" tabindex="-1"></a>So go ahead, pick somewhere interesting. Does the model perform better in productive coastal waters or in regions dominated by smaller phytoplankton? Do changes in phytoplankton communities correspond with changes in predicted fisheries production? And where does the model seem to miss something important?</span>
+<span id="cb9-293"><a href="#cb9-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-294"><a href="#cb9-294" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip}</span>
+<span id="cb9-295"><a href="#cb9-295" aria-hidden="true" tabindex="-1"></a><span class="fu">## Interactive ecosystem explorer</span></span>
+<span id="cb9-296"><a href="#cb9-296" aria-hidden="true" tabindex="-1"></a>Choose a marine ecoregion, map variable, and catch-composition category below. The profile, global map, and composition chart update directly in your browser.</span>
+<span id="cb9-297"><a href="#cb9-297" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb9-298"><a href="#cb9-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-301"><a href="#cb9-301" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb9-302"><a href="#cb9-302" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb9-303"><a href="#cb9-303" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: true</span></span>
+<span id="cb9-304"><a href="#cb9-304" aria-hidden="true" tabindex="-1"></a><span class="co">#| results: asis</span></span>
+<span id="cb9-305"><a href="#cb9-305" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> HTML, display</span>
+<span id="cb9-306"><a href="#cb9-306" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ecosystem_dashboard <span class="im">as</span> dash</span>
+<span id="cb9-307"><a href="#cb9-307" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> quarto_explorer <span class="im">import</span> make_explorer</span>
+<span id="cb9-308"><a href="#cb9-308" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
+<span id="cb9-309"><a href="#cb9-309" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> shutil</span>
+<span id="cb9-310"><a href="#cb9-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-311"><a href="#cb9-311" aria-hidden="true" tabindex="-1"></a><span class="co"># Capture routine SAU loading messages so they do not appear in the tutorial.</span></span>
+<span id="cb9-312"><a href="#cb9-312" aria-hidden="true" tabindex="-1"></a><span class="co"># Exceptions still propagate and stop the render if configuration fails.</span></span>
+<span id="cb9-313"><a href="#cb9-313" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> contextlib</span>
+<span id="cb9-314"><a href="#cb9-314" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
+<span id="cb9-315"><a href="#cb9-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-316"><a href="#cb9-316" aria-hidden="true" tabindex="-1"></a>_sau_log <span class="op">=</span> io.StringIO()</span>
+<span id="cb9-317"><a href="#cb9-317" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> contextlib.redirect_stdout(_sau_log):</span>
+<span id="cb9-318"><a href="#cb9-318" aria-hidden="true" tabindex="-1"></a>    dash.configure(</span>
+<span id="cb9-319"><a href="#cb9-319" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>data, sst<span class="op">=</span>sst, chl<span class="op">=</span>chl, meow<span class="op">=</span>meow,</span>
+<span id="cb9-320"><a href="#cb9-320" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span>alpha, TE<span class="op">=</span>TE, wet_weight<span class="op">=</span>wet_weight</span>
+<span id="cb9-321"><a href="#cb9-321" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-322"><a href="#cb9-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-323"><a href="#cb9-323" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep genuine missing-data or mapping warnings visible.</span></span>
+<span id="cb9-324"><a href="#cb9-324" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _line <span class="kw">in</span> _sau_log.getvalue().splitlines():</span>
+<span id="cb9-325"><a href="#cb9-325" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">any</span>(word <span class="kw">in</span> _line.lower() <span class="cf">for</span> word <span class="kw">in</span> (</span>
+<span id="cb9-326"><a href="#cb9-326" aria-hidden="true" tabindex="-1"></a>        <span class="st">'warning'</span>, <span class="st">'missing'</span>, <span class="st">'unmatched'</span>, <span class="st">'not found'</span>, <span class="st">'conflict'</span></span>
+<span id="cb9-327"><a href="#cb9-327" aria-hidden="true" tabindex="-1"></a>    )):</span>
+<span id="cb9-328"><a href="#cb9-328" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(_line)</span>
+<span id="cb9-329"><a href="#cb9-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-330"><a href="#cb9-330" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a standalone explorer and copy it into Quarto's published site.</span></span>
+<span id="cb9-331"><a href="#cb9-331" aria-hidden="true" tabindex="-1"></a>explorer_file <span class="op">=</span> make_explorer(<span class="st">'explorer.html'</span>)</span>
+<span id="cb9-332"><a href="#cb9-332" aria-hidden="true" tabindex="-1"></a>site_dir <span class="op">=</span> Path(<span class="st">'_site'</span>)</span>
+<span id="cb9-333"><a href="#cb9-333" aria-hidden="true" tabindex="-1"></a>site_dir.mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-334"><a href="#cb9-334" aria-hidden="true" tabindex="-1"></a>shutil.copy2(explorer_file, site_dir <span class="op">/</span> <span class="st">'explorer.html'</span>)</span>
+<span id="cb9-335"><a href="#cb9-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-336"><a href="#cb9-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-337"><a href="#cb9-337" aria-hidden="true" tabindex="-1"></a><span class="co"># Embed the explorer with automatic height adjustment.</span></span>
+<span id="cb9-338"><a href="#cb9-338" aria-hidden="true" tabindex="-1"></a>display(HTML(<span class="st">"""</span></span>
+<span id="cb9-339"><a href="#cb9-339" aria-hidden="true" tabindex="-1"></a><span class="st">&lt;iframe</span></span>
+<span id="cb9-340"><a href="#cb9-340" aria-hidden="true" tabindex="-1"></a><span class="st">    id="phyto2fish-explorer"</span></span>
+<span id="cb9-341"><a href="#cb9-341" aria-hidden="true" tabindex="-1"></a><span class="st">    title="Interactive Phyto2Fish ecosystem explorer"</span></span>
+<span id="cb9-342"><a href="#cb9-342" aria-hidden="true" tabindex="-1"></a><span class="st">    src="explorer.html"</span></span>
+<span id="cb9-343"><a href="#cb9-343" aria-hidden="true" tabindex="-1"></a><span class="st">    style="display:block;width:100%;height:1350px;border:0;overflow:hidden;"</span></span>
+<span id="cb9-344"><a href="#cb9-344" aria-hidden="true" tabindex="-1"></a><span class="st">    scrolling="no"</span></span>
+<span id="cb9-345"><a href="#cb9-345" aria-hidden="true" tabindex="-1"></a><span class="st">    loading="eager"</span></span>
+<span id="cb9-346"><a href="#cb9-346" aria-hidden="true" tabindex="-1"></a><span class="st">    onload="</span></span>
+<span id="cb9-347"><a href="#cb9-347" aria-hidden="true" tabindex="-1"></a><span class="st">        const frame = this;</span></span>
+<span id="cb9-348"><a href="#cb9-348" aria-hidden="true" tabindex="-1"></a><span class="st">        const resize = () =&gt; {</span></span>
+<span id="cb9-349"><a href="#cb9-349" aria-hidden="true" tabindex="-1"></a><span class="st">            const doc = frame.contentDocument;</span></span>
+<span id="cb9-350"><a href="#cb9-350" aria-hidden="true" tabindex="-1"></a><span class="st">            if (doc) {</span></span>
+<span id="cb9-351"><a href="#cb9-351" aria-hidden="true" tabindex="-1"></a><span class="st">                frame.style.height =</span></span>
+<span id="cb9-352"><a href="#cb9-352" aria-hidden="true" tabindex="-1"></a><span class="st">                    Math.ceil(doc.documentElement.scrollHeight + 5) + 'px';</span></span>
+<span id="cb9-353"><a href="#cb9-353" aria-hidden="true" tabindex="-1"></a><span class="st">            }</span></span>
+<span id="cb9-354"><a href="#cb9-354" aria-hidden="true" tabindex="-1"></a><span class="st">        };</span></span>
+<span id="cb9-355"><a href="#cb9-355" aria-hidden="true" tabindex="-1"></a><span class="st">        resize();</span></span>
+<span id="cb9-356"><a href="#cb9-356" aria-hidden="true" tabindex="-1"></a><span class="st">        new ResizeObserver(resize).observe(</span></span>
+<span id="cb9-357"><a href="#cb9-357" aria-hidden="true" tabindex="-1"></a><span class="st">            frame.contentDocument.documentElement</span></span>
+<span id="cb9-358"><a href="#cb9-358" aria-hidden="true" tabindex="-1"></a><span class="st">        );</span></span>
+<span id="cb9-359"><a href="#cb9-359" aria-hidden="true" tabindex="-1"></a><span class="st">    "</span></span>
+<span id="cb9-360"><a href="#cb9-360" aria-hidden="true" tabindex="-1"></a><span class="st">&gt;&lt;/iframe&gt;</span></span>
+<span id="cb9-361"><a href="#cb9-361" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span>))</span>
+<span id="cb9-362"><a href="#cb9-362" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb9-363"><a href="#cb9-363" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-364"><a href="#cb9-364" aria-hidden="true" tabindex="-1"></a>Well, there you have it! We've journeyed from teeny tiny phytoplankton to fisheries catch, and sprinkled in a little satellite oceanography and trophic ecology along the way. Hopefully, this tutorial has adequetely conveyed that knowing how much carbon phytoplankton produce only tells us part of the story. What happens to that carbon as it moves through the food web matters too, and even a relatively simple adjustment for phytoplankton size structure can help us better understand differences in fisheries catch across the ocean. Of course, our little model leaves plenty out. Fish move, food webs are messy, and what ultimately gets caught depends on everything from ocean conditions and population dynamics to fishing activity and management decisions. We're certainly not predicting exactly how many fish will be caught, much less how many should be caught. The goal here isn't to build a perfect fisheries model. It's to explore how differences in primary production, phytoplankton size structure, and trophic pathways might help explain why some marine ecosystems support more fisheries catch than others.</span>
+<span id="cb9-364"><a href="#cb9-364" aria-hidden="true" tabindex="-1"></a><span class="fu">## Wrapping things up</span></span>
 <span id="cb9-365"><a href="#cb9-365" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-366"><a href="#cb9-366" aria-hidden="true" tabindex="-1"></a>What still continues to blow my mind is that we're using observations collected by satellites hundreds of kilometers above the ocean to explore microscopic level processes that manifest through the entire collective marine food web. We can't follow every bite, trace every carbon atom, or see the fish themselves from orbit, but phytoplankton provide us with a remarkable window into the biological workings of the ocean at scales we simply can't achieve through traditional observations alone. And we're only getting started! With NASA's Plankton, Aerosol, Cloud, ocean Ecosystem (PACE) mission, hyperspectral ocean color measurements are opening up new opportunities to distinguish phytoplankton groups based on their optical signatures, rather than relying primarily on chlorophyll-*a* concentration to infer community structure. Imagine what we might learn about fisheries production as these observations become increasingly useful for characterizing the phytoplankton communities at the base of marine food webs! There are plenty of ways to improve on what we've done here, and hopefully this tutorial leaves you with a few ideas of your own. Thanks for coming along for the ride!</span>
+<span id="cb9-366"><a href="#cb9-366" aria-hidden="true" tabindex="-1"></a>Well, there you have it! We've journeyed from teeny tiny phytoplankton to fisheries catch, and sprinkled in a little satellite oceanography and trophic ecology along the way. Hopefully, this tutorial has adequetely conveyed that knowing how much carbon phytoplankton produce only tells us part of the story. What happens to that carbon as it moves through the food web matters too, and even a relatively simple adjustment for phytoplankton size structure can help us better understand differences in fisheries catch across the ocean. Of course, our little model leaves plenty out. Fish move, food webs are messy, and what ultimately gets caught depends on everything from ocean conditions and population dynamics to fishing activity and management decisions. We're certainly not predicting exactly how many fish will be caught, much less how many should be caught. The goal here isn't to build a perfect fisheries model. It's to explore how differences in primary production, phytoplankton size structure, and trophic pathways might help explain why some marine ecosystems support more fisheries catch than others.</span>
+<span id="cb9-367"><a href="#cb9-367" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-368"><a href="#cb9-368" aria-hidden="true" tabindex="-1"></a>What still continues to blow my mind is that we're using observations collected by satellites hundreds of kilometers above the ocean to explore microscopic level processes that manifest through the entire collective marine food web. We can't follow every bite, trace every carbon atom, or see the fish themselves from orbit, but phytoplankton provide us with a remarkable window into the biological workings of the ocean at scales we simply can't achieve through traditional observations alone. And we're only getting started! With NASA's Plankton, Aerosol, Cloud, ocean Ecosystem (PACE) mission, hyperspectral ocean color measurements are opening up new opportunities to distinguish phytoplankton groups based on their optical signatures, rather than relying primarily on chlorophyll-*a* concentration to infer community structure. Imagine what we might learn about fisheries production as these observations become increasingly useful for characterizing the phytoplankton communities at the base of marine food webs! There are plenty of ways to improve on what we've done here, and hopefully this tutorial leaves you with a few ideas of your own. Thanks for coming along for the ride!</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
