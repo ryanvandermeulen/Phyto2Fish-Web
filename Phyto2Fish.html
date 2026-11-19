@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.34">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,10 +10,16 @@
 
 <title>Phytoplankton size structure and fisheries catch – Phyto2Fish</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -59,7 +65,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -72,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-c8ad9e5dbd60b7b70b38521ab19b7da4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-dfb324f25d9b1687192fa8be62ac8f9c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-172ba59bd5e0b52282274ba0c0cc16fc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -104,12 +110,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -122,7 +128,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -230,17 +236,17 @@ window.Quarto = {
 <p><em>Note: I would like to disclose that instead of inflicting the psychological torture of navigating my raw code onto you, I asked ChatGPT to clean up my messiness and streamline/annote my code for this tutorial.</em></p>
 <section id="first-our-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="first-our-libraries">First, our libraries</h2>
-<div id="94d45d2e" class="cell" data-execution_count="1">
+<div id="8b901fd2" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show Python code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> gaussian_kde</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cartopy.crs <span class="im">as</span> ccrs</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cartopy.feature <span class="im">as</span> cfeature</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cartopy.feature <span class="im">as</span> cfeature</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -252,11 +258,11 @@ C_{fish} = \alpha \times NPP \times TE^{(TL-1)}
 \]</span></p>
 <p>Slightly more detailed - here, <span class="math inline">\(NPP\)</span> represents the total, summed carbon produced within a given ecoregion (converted to “fish-equivalent” wet weight by a hand-wavy factor of 9), <span class="math inline">\(TE\)</span> describes the fraction of energy transferred between successive trophic levels, a harvesting fraction (<span class="math inline">\(\alpha\)</span>) represents the proportion of available energy ultimately realized as fisheries catch, and the exponent (<span class="math inline">\(TL - 1\)</span>) approximates the number of transfers between primary producers and harvested fish. Long story short, more primary production generally means more energy available to support fisheries, while each additional trophic transfer <strong>exponentially</strong> reduces the amount that ultimately reaches harvested fish. For example, fisheries targeting higher trophic-level predators like tuna require energy to pass through more steps in the food web, with losses occurring along the way. Fisheries targeting lower trophic-level species like sardines, on the other hand, benefit from shorter pathways between phytoplankton and the fish being harvested, meaning a greater fraction of the original energy from primary production can make its way into the catch.</p>
 <p>This is the core foundational framework we’re going to work with here, so let’s take a moment to set some of the parameters that stay constant. Feel free to play around with them! If you’re a fish nerd, you may have very strong opinions about these particular parameters. These terms can vary considerably among ecosystems, but based on the mean of ranges found in literature, we’ll use a harvesting fraction (<span class="math inline">\(\alpha\)</span>) of 0.175, a trophic transfer efficiency (<span class="math inline">\(TE\)</span>) of 0.13, and our 9:1 conversion of carbon to fish-equivalent wet weight.</p>
-<div id="56839f9c" class="cell" data-execution_count="2">
+<div id="b15ad747" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show Python code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fisheries model parameters</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>alpha, TE, wet_weight <span class="op">=</span> <span class="fl">0.175</span>, <span class="fl">0.13</span>, <span class="dv">9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fisheries model parameters</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>alpha, TE, wet_weight <span class="op">=</span> <span class="fl">0.175</span>, <span class="fl">0.13</span>, <span class="dv">9</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -292,17 +298,17 @@ C_{m} = C - C_{p,n}
 \]</span></p>
 <p>The fraction of each phytoplankton size class to total chlorophyll concentration (<span class="math inline">\(f_p, f_n, f_m\)</span>) can then be calculated by dividing the size-specific chlorophyll concentration (<span class="math inline">\(C_p, C_n, C_m\)</span>) by the total chlorophyll concentration (<span class="math inline">\(C\)</span>) from satellite ocean color data. If your eyes are crossed, no worries, just be assured that someone spent a considerable amount of time figuring this all out, and now we can go with the maths :-) The constants below can be changed for different regions (see Table 4.2 in the <a href="https://ioccg.org/wp-content/uploads/2018/09/ioccg_report_15_2014.pdf">IOCCG report #15</a>), but we’re rolling with coefficients that are meant to work on global scales.</p>
 <p><img src="https://raw.githubusercontent.com/fish-pace/2025-tutorials/main/Supporting_files/Princess_bride.gif" class="img-fluid" alt="Is this clear?">!</p>
-<div id="fc2af99f" class="cell" data-execution_count="3">
+<div id="20c45255" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show Python code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Brewin (2011) size-class model coefficients</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Brewin (2011) size-class model coefficients</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Cpm, Cpmn, Dp, Dpn <span class="op">=</span> <span class="fl">0.13</span>, <span class="fl">0.77</span>, <span class="fl">0.80</span>, <span class="fl">0.94</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> size_fractions(chl):</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    chl <span class="op">=</span> np.asarray(chl, dtype<span class="op">=</span><span class="bu">float</span>)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    cp <span class="op">=</span> Cpm <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> np.exp(<span class="op">-</span>Dp <span class="op">*</span> chl <span class="op">/</span> Cpm))</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    cpn <span class="op">=</span> Cpmn <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> np.exp(<span class="op">-</span>Dpn <span class="op">*</span> chl <span class="op">/</span> Cpmn))</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> cp <span class="op">/</span> chl, (cpn <span class="op">-</span> cp) <span class="op">/</span> chl, (chl <span class="op">-</span> cpn) <span class="op">/</span> chl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> cp <span class="op">/</span> chl, (cpn <span class="op">-</span> cp) <span class="op">/</span> chl, (chl <span class="op">-</span> cpn) <span class="op">/</span> chl</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -318,10 +324,10 @@ C_{P2F} = \alpha \times NPP \times TE^{(TL-1+\Delta L)}
 \]</span></p>
 <p>Here, the f terms represent the relative contributions of micro-, nano-, and picophytoplankton, while the corresponding ω values control their influence on ΔL. Importantly, <strong>these coefficients aren’t meant to represent the literal number of trophic transfers associated with each phytoplankton size class</strong>. Instead, they control the magnitude and shape of the relationship between chlorophyll-a and <span class="math inline">\(\Delta L\)</span>. Our configuration (<span class="math inline">\(\omega_{micro}=0\)</span>, <span class="math inline">\(\omega_{nano}=0.15\)</span>, <span class="math inline">\(\omega_{pico}=2.5\)</span>) produces a relationship in which <span class="math inline">\(\Delta L\)</span> increases as smaller phytoplankton become more prevalent, representing the additional energy losses associated with longer trophic pathways. We’re not changing how much carbon phytoplankton produce, or the trophic level of the fish being harvested. We’re simply adjusting the effective length of the food-web pathway connecting the two. When smaller phytoplankton dominate, <span class="math inline">\(\Delta L\)</span> introduces additional trophic transfers, reducing the amount of production expected to reach harvested fish. When larger phytoplankton dominate, <span class="math inline">\(\Delta L\)</span> approaches zero, and we recover the original model. So, how do we put a number on those extra transfers?</p>
 <p>The plot below shows how phytoplankton size fractions change across a range of chlorophyll-a concentrations, and how those changes translate into <span class="math inline">\(\Delta L\)</span>.</p>
-<div id="c657e522" class="cell" data-execution_count="4">
+<div id="7640114a" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show Python code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Editable size-specific transfer weighting coefficients (pico, nano, micro)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Editable size-specific transfer weighting coefficients (pico, nano, micro)</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>omega_pico, omega_nano, omega_micro <span class="op">=</span> <span class="fl">2.5</span>, <span class="fl">0.15</span>, <span class="fl">0.0</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> delta_tl(chl):</span>
@@ -343,7 +349,7 @@ C_{P2F} = \alpha \times NPP \times TE^{(TL-1+\Delta L)}
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="fl">0.01</span>, <span class="dv">10</span>)</span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>ax.grid(alpha<span class="op">=</span><span class="fl">0.25</span>)</span>
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -359,10 +365,10 @@ C_{P2F} = \alpha \times NPP \times TE^{(TL-1+\Delta L)}
 <p><em>A quick caveat</em>: <strong>we are not attempting to predict how many fish will actually be caught in a given year</strong>. Fisheries catches depend on fishing effort, management, market conditions, population dynamics, and plenty of other factors that aren’t explicitly represented here. Instead, we’re exploring whether accounting for phytoplankton size structure improves our ability to describe broad-scale differences in fisheries production relative to a simpler model based on NPP and trophic level alone.</p>
 <p>To evaluate our approach, we apply the model across the Marine Ecoregions of the World (MEOWs), using annual estimates of satellite-derived net primary production (<span class="math inline">\(NPP\)</span>) and chlorophyll-a, alongside reported fisheries catch and mean trophic level data from the (<a href="https://www.seaaroundus.org/data/#/marine-trophic-index">Sea Around Us project</a>). By combining these datasets, we can estimate how much of that primary production might ultimately support fisheries, and compare our predictions against reported catches. Now, about the data… I went back and forth about including all the data extraction and processing procedures in this notebook. I won’t lie, some of it was a pain. Between manually downloading datasets, temporal interpolations, resampling, and wrangling files across different virtual computing environments (which have the audacity of imposing storage limits!), there were quite a few moving parts. At peak irritation level, I discovered that the MEOWs used by the Sea Around Us dataset <em>occasionally</em> have slightly different names than those in the MEOW shapefile. Ultimately, I decided to spare you the data-wrangling adventure and provide the processed, matched up datasets directly. The extraction, aggregation, and processing procedures are described in the associated manuscript, but I’ve left those steps out here to keep things approachable (and because of those pesky storage limitations).</p>
 <p>Below, we load the processed datasets, reconcile the ecoregion names, combine everything into a single table, and calculate our Phyto2Fish predictions using the parameters we defined above. We’ll also calculate the logarithmic bias between predicted and observed catch, which will come in handy when we start evaluating model performance. One more thing! You’ll notice that we also load annual mean sea surface temperature (SST) and fishing effort data. SST wasn’t used in the original model, while fishing effort provides some useful context for interpreting differences between predictions and reported catch. Neither is required to calculate Phyto2Fish, but perhaps you’ll find something interesting by exploring them further. <strong>Eat the gatekeepers!</strong></p>
-<div id="b47daa2e" class="cell" data-execution_count="5">
+<div id="5baa6a64" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show Python code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read data</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read data</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>npp <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/MEOW_integrated_NPP_1998_2025_tonnesC.csv'</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>chl <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/MEOW_annual_OCCCI4km_mean_CHL_1998_2025.csv'</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>sst <span class="op">=</span> pd.read_csv(<span class="st">'Supporting_files/MEOW_annual_mean_SST_1998_2025.csv'</span>)</span>
@@ -397,17 +403,17 @@ C_{P2F} = \alpha \times NPP \times TE^{(TL-1+\Delta L)}
 <span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>effort_data <span class="op">=</span> data.dropna(subset<span class="op">=</span>[<span class="st">'mean_monthly_fishing_hours'</span>]).copy()</span>
 <span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Valid ecoregion-years: </span><span class="sc">{</span><span class="bu">len</span>(data)<span class="sc">}</span><span class="ss"> | Years: </span><span class="sc">{</span>data<span class="sc">.</span>year<span class="sc">.</span><span class="bu">min</span>()<span class="sc">}</span><span class="ss">–</span><span class="sc">{</span>data<span class="sc">.</span>year<span class="sc">.</span><span class="bu">max</span>()<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>data.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Matched MEOWs: 206
 Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="29">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -428,7 +434,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
+<th data-quarto-table-cell-role="th">0</th>
 <td>1998</td>
 <td>Adriatic Sea</td>
 <td>1.467606e+07</td>
@@ -444,7 +450,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <td>-0.651946</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
+<th data-quarto-table-cell-role="th">1</th>
 <td>1999</td>
 <td>Adriatic Sea</td>
 <td>1.380182e+07</td>
@@ -460,7 +466,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <td>-0.697737</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
+<th data-quarto-table-cell-role="th">2</th>
 <td>2000</td>
 <td>Adriatic Sea</td>
 <td>1.359647e+07</td>
@@ -476,7 +482,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <td>-0.649824</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
+<th data-quarto-table-cell-role="th">3</th>
 <td>2001</td>
 <td>Adriatic Sea</td>
 <td>1.366810e+07</td>
@@ -492,7 +498,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <td>-0.622602</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
+<th data-quarto-table-cell-role="th">4</th>
 <td>2002</td>
 <td>Adriatic Sea</td>
 <td>1.481160e+07</td>
@@ -517,10 +523,10 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <section id="howd-we-do" class="level2">
 <h2 class="anchored" data-anchor-id="howd-we-do">How’d we do?</h2>
 <p>Because we scientists are gluttons for scatter plots, let’s see how our predicted fisheries catch stacks up against the real thing! In our created plot, the dashed line represents a perfect match between observed and predicted catch. Points above the line indicate overprediction, while points below indicate underprediction. We’ve also included a few statistics to help quantify how well the model performs. Remember, we’re trying to capture broad-scale patterns in fisheries production, not predict exactly how many fish will end up on someone’s dinner plate. Obviously, there’s a lot more going on in food web + fleet dynamics than bottom-up forcing from our phytoplankton overlords.</p>
-<div id="957dad2a" class="cell" data-execution_count="6">
+<div id="1f11d526" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show Python code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Geometric mean ± 1 geometric standard deviation per MEOW</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Geometric mean ± 1 geometric standard deviation per MEOW</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> geom_stats(x):</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    log_x <span class="op">=</span> np.log10(x)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.Series({<span class="st">'mean'</span>: <span class="dv">10</span><span class="op">**</span>log_x.mean(), <span class="st">'low'</span>: <span class="dv">10</span><span class="op">**</span>(log_x.mean() <span class="op">-</span> log_x.std()), <span class="st">'high'</span>: <span class="dv">10</span><span class="op">**</span>(log_x.mean() <span class="op">+</span> log_x.std())})</span>
@@ -547,7 +553,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'Predicted catch (tonnes)'</span>)</span>
 <span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Phyto2Fish'</span>)</span>
 <span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -561,10 +567,10 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <section id="mappy-time" class="level2">
 <h2 class="anchored" data-anchor-id="mappy-time">Mappy time!</h2>
 <p>Let’s put all this in a little spatial context. The map we’ll generate below will show the average difference between the Phyto2Fish-predicted and observed fisheries catch across the MEOWs. Red regions indicate where our model overpredicts catch, while blue regions indicate underprediction. The closer to white, the better the agreement. Darker gray areas represent regions that were excluded from the analysis or lacked sufficient data, including regions for which fisheries catch data were unavailable from Sea Around Us (e.g., Antarctica).</p>
-<div id="3b1115e8" class="cell" data-execution_count="7">
+<div id="9cde0c7b" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show Python code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch 'Log_bias' to 'Baseline_Log_bias' to view baseline model bias instead</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Switch 'Log_bias' to 'Baseline_Log_bias' to view baseline model bias instead</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>mean_bias <span class="op">=</span> data.groupby(<span class="st">'MEOW'</span>, as_index<span class="op">=</span><span class="va">False</span>)[<span class="st">'Log_bias'</span>].mean()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>map_data <span class="op">=</span> meow.merge(mean_bias, left_on<span class="op">=</span><span class="st">'ECOREGION'</span>, right_on<span class="op">=</span><span class="st">'MEOW'</span>, how<span class="op">=</span><span class="st">'left'</span>)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -573,7 +579,7 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>ax.add_feature(cfeature.LAND, facecolor<span class="op">=</span><span class="st">'lightgray'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>, linewidth<span class="op">=</span><span class="fl">0.3</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>ax.<span class="bu">set</span>(xlabel<span class="op">=</span><span class="st">'Longitude'</span>, ylabel<span class="op">=</span><span class="st">'Latitude'</span>, title<span class="op">=</span><span class="st">'Mean fisheries catch prediction bias'</span>)</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -602,14 +608,14 @@ Valid ecoregion-years: 4114 | Years: 1998–2019</code></pre>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Interactive ecosystem explorer
+<span class="screen-reader-only">Tip</span>Interactive ecosystem explorer
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>Choose a marine ecoregion, map variable, and catch-composition category below. The profile, global map, and composition chart update directly in your browser.</p>
 </div>
 </div>
-<div id="832206f7" class="cell" data-results="asis" data-execution_count="8">
+<div id="8684975a" class="cell" data-results="asis" data-execution_count="8">
 <div class="cell-output cell-output-display">
 
 <iframe id="phyto2fish-explorer" title="Interactive Phyto2Fish ecosystem explorer" src="explorer.html" style="display:block;width:100%;height:1350px;border:0;overflow:hidden;" scrolling="no" loading="eager" onload="
@@ -691,13 +697,14 @@ Interactive ecosystem explorer
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -731,16 +738,16 @@ Interactive ecosystem explorer
     }
     function toggleCodeHandler(show) {
       return function(e) {
-        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
-        for (let i=0; i<detailsSrc.length; i++) {
-          const details = detailsSrc[i].parentElement;
+        const cellDetails = window.document.querySelectorAll(".cell details.code-fold");
+        for (let i=0; i<cellDetails.length; i++) {
+          const details = cellDetails[i];
           if (show) {
             details.open = true;
           } else {
             details.removeAttribute("open");
           }
         }
-        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const cellCodeDivs = window.document.querySelectorAll(".cell div.sourceCode.cell-code");
         const fromCls = show ? "hidden" : "unhidden";
         const toCls = show ? "unhidden" : "hidden";
         for (let i=0; i<cellCodeDivs.length; i++) {
@@ -1090,7 +1097,7 @@ Interactive ecosystem explorer
     }
   });
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb9" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> Phytoplankton size structure and fisheries catch</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> An interactive-science-inspired Phyto2Fish tutorial</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> Ryan Vandermeulen (NOAA Fisheries)</span></span>
@@ -1440,7 +1447,7 @@ Interactive ecosystem explorer
 <span id="cb9-364"><a href="#cb9-364" aria-hidden="true" tabindex="-1"></a>Well, there you have it! We've journeyed from teeny tiny phytoplankton to fisheries catch, and sprinkled in a little satellite oceanography and trophic ecology along the way. Hopefully, this tutorial has adequetely conveyed that knowing how much carbon phytoplankton produce only tells us part of the story. What happens to that carbon as it moves through the food web matters too, and even a relatively simple adjustment for phytoplankton size structure can help us better understand differences in fisheries catch across the ocean. Of course, our little model leaves plenty out. Fish move, food webs are messy, and what ultimately gets caught depends on everything from ocean conditions and population dynamics to fishing activity and management decisions. We're certainly not predicting exactly how many fish will be caught, much less how many should be caught. The goal here isn't to build a perfect fisheries model. It's to explore how differences in primary production, phytoplankton size structure, and trophic pathways might help explain why some marine ecosystems support more fisheries catch than others.</span>
 <span id="cb9-365"><a href="#cb9-365" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-366"><a href="#cb9-366" aria-hidden="true" tabindex="-1"></a>What still continues to blow my mind is that we're using observations collected by satellites hundreds of kilometers above the ocean to explore microscopic level processes that manifest through the entire collective marine food web. We can't follow every bite, trace every carbon atom, or see the fish themselves from orbit, but phytoplankton provide us with a remarkable window into the biological workings of the ocean at scales we simply can't achieve through traditional observations alone. And we're only getting started! With NASA's Plankton, Aerosol, Cloud, ocean Ecosystem (PACE) mission, hyperspectral ocean color measurements are opening up new opportunities to distinguish phytoplankton groups based on their optical signatures, rather than relying primarily on chlorophyll-*a* concentration to infer community structure. Imagine what we might learn about fisheries production as these observations become increasingly useful for characterizing the phytoplankton communities at the base of marine food webs! There are plenty of ways to improve on what we've done here, and hopefully this tutorial leaves you with a few ideas of your own. Thanks for coming along for the ride!</span>
-</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
